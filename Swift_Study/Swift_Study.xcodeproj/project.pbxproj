@@ -233,6 +233,7 @@
 				CAE42C331AA1935A00B2DB9F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
