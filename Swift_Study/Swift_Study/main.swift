@@ -207,6 +207,98 @@ func ==(lhs: StudentGT, rhs: StudentGT) -> Bool{
 
 var students:Dictionary<StudentGT,SchoolGT> = Dictionary()
 
+// Swift to Object-C
+// #### String vs NSString ####
+var string = NSString(string:"123")
+// var num = string.toInt()  -- Cannot using swift method for the object-c object
+var num = (string as String).toInt()
+println("num is \(num!)")
+
+let stringSet:NSString = "Apple,iOS,Swift,String"
+let subStringSetArray = stringSet.componentsSeparatedByString(",")
+for sub : AnyObject in subStringSetArray {
+    println(sub)
+}
+
+let stringSet2:NSString = "Apple,iOS,Swift;String"
+let subStringSetArray2 = stringSet2.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString:",;"))
+for sub : AnyObject in subStringSetArray2 {
+    println(sub)
+}
+
+let rangeForStr = stringSet2.rangeOfString("Swift")
+println("range is \(rangeForStr)")
+
+// #### NSArray ####
+// Convertion between NSArray (Object-C) and Array (Swift)
+let array:[AnyObject] = [1,3,5,"Roger",3]
+let nsArray:NSArray = array
+let swiftArray = nsArray as [AnyObject]
+println(nsArray)
+println(swiftArray)
+
+// API of NSArray and Array
+println("swiftArray.count is \(swiftArray.count) and nsArray.count is \(nsArray.count)")
+println("The first object of array is \(nsArray.firstObject!)")
+println("The first object of array is \(nsArray.objectAtIndex(0))")
+println("The first object of array is \(nsArray[0])")
+
+// #### Dictionary vs NSDictionary ####
+let swiftDict:Dictionary<String,String> = ["1":"Roger","2":"Phoebe"]
+for(key,value) in swiftDict {
+    println("\(key):\(value)")
+}
+
+let nsDict:NSDictionary = swiftDict
+println(nsDict.allKeys)
+println(nsDict.allValues)
+
+// #### Set ####
+let nsSet = NSSet(array:swiftArray)
+println(nsSet)
+
+let nsMutableSet = NSMutableSet(array:swiftArray)
+nsMutableSet.addObject(7)
+println(nsMutableSet)
+
+println(nsMutableSet.containsObject(9))
+println(nsMutableSet.member("Roger"))
+
+let nsSet1 = NSSet(array:["a","b","c"])
+let nsSet2 = NSSet(array:["a","b","d"])
+println(nsSet1.isSubsetOfSet(nsSet2))
+println(nsSet1.intersectsSet(nsSet2))
+
+let nsMutableSet1 = NSMutableSet(array:["a","b","c"])
+let nsMutableSet2 = NSMutableSet(array:["a","b","d"])
+println(nsMutableSet1.unionSet(nsMutableSet2))
+println(nsMutableSet1)
+
+// #### NSData ####
+// convert String to NSData to Base64 String
+let stringToEncode = "Hello World"
+let utf8EncodeNSData:NSData! = stringToEncode.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)
+let base64EncodedString = utf8EncodeNSData.base64EncodedStringWithOptions(NSDataBase64EncodingOptions(0))
+println("Encoded String: \(base64EncodedString)")
+
+// convert Base64 String to NSData to String
+let base64EncodedNSData:NSData! = NSData(base64EncodedString:base64EncodedString,options:NSDataBase64DecodingOptions(0))
+let stringWithDecode = NSString(data:base64EncodedNSData,encoding:NSUTF8StringEncoding)
+println("Decoded String: \(stringWithDecode)")
+
+// #### NSURL ####
+let mutableURL = NSURL(scheme:"http", host:"sports.sina.com.cn",path:"/g/premierleague/")
+println(mutableURL)
+
+let complateString = "http://www.xxx.com/中文/hello world"
+let complateURL = NSURL(string:complateString)
+println(complateURL)
+
+let convertedString = complateString.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
+let convertedURL = NSURL(string:convertedString!)
+println(convertedURL)
+
+
 
 
 
