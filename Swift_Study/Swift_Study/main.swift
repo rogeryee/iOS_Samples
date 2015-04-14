@@ -297,7 +297,9 @@ println(complateURL)
 let convertedString = complateString.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
 let convertedURL = NSURL(string:convertedString!)
 println(convertedURL)
-
+println("host:\(convertedURL!.host)")
+println("scheme:\(convertedURL!.scheme)")
+println("port:\(convertedURL!.port)")
 
 
 
