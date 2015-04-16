@@ -28,7 +28,7 @@ class DetailedViewController: UIViewController {
     }
     
     func btnBackClicked(sender:AnyObject) {
-        let action = backToParentAction! as ()->Void
+        let action = backToParentAction! as! ()->Void
         action()
     }
     

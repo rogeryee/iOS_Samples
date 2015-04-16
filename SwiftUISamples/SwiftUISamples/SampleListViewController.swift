@@ -38,9 +38,9 @@ class SampleListViewController: UIViewController,UITableViewDataSource,UITableVi
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = self.tableView.dequeueReusableCellWithIdentifier("SampleCell", forIndexPath: indexPath) as UITableViewCell
+        let cell = self.tableView.dequeueReusableCellWithIdentifier("SampleCell", forIndexPath: indexPath) as! UITableViewCell
         cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-        cell.textLabel.text = self.samples[indexPath.row]
+        cell.textLabel!.text = self.samples[indexPath.row]
         return cell
     }
     
