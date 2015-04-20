@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>A18DF850-CD0A-4B77-8593-224D2620BA0B</string>
 	<key>IDESourceControlProjectName</key>
-	<string>SwiftUISamples</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>EE843D9682BB547321274B6184FE377C45DF3EF3</key>
 		<string>https://github.com/rogeryee/iOS_Samples.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>SwiftUISamples/SwiftUISamples.xcodeproj</string>
+	<string>SwiftUISamples/SwiftUISamples.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>EE843D9682BB547321274B6184FE377C45DF3EF3</key>

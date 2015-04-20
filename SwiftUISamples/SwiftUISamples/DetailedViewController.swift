@@ -35,6 +35,7 @@ class DetailedViewController: UIViewController {
     func loadSample(sample:String) {
         switch sample {
         case "HelloWorld" : addView(HelloWorldSample(frame:self.view.bounds))
+        case "Button" : addView(ButtonSample(frame:self.view.bounds))
         case "ActionSheetView" : addView(ActionSheetSample(frame:self.view.bounds))
         case "ActivityIndicator + AlertView" : addView(ActivityIndicatorAndAlertSample(frame:self.view.bounds))
         case "ImageView" : self.view.addSubview(HelloWorldSample(frame:self.view.bounds))

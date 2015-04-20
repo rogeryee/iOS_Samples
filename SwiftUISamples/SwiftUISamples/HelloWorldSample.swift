@@ -12,11 +12,20 @@ class HelloWorldSample: SampleView {
 
     override func loadView() {
         
+        // Label widget
         let label = UILabel(frame:self.bounds)
-        label.backgroundColor = UIColor.clearColor()
+        label.textColor=UIColor.whiteColor()
+        label.backgroundColor=UIColor.blackColor()
         label.textAlignment = NSTextAlignment.Center
-        label.font = UIFont.systemFontOfSize(20)
-        label.text = "Hello Roger, welcome to Swift world."
+        //label.font = UIFont.systemFontOfSize(20)
+        label.font = UIFont(name:"Zapfino", size:20)
+        label.text = "Hello Roger! Welcome to Swift World!"
+        label.shadowColor=UIColor.grayColor()
+        label.shadowOffset=CGSizeMake(-5,5)
+        
+        // 文字省略方式
+        label.lineBreakMode = NSLineBreakMode.ByTruncatingMiddle
+        //label.adjustsFontSizeToFitWidth = true
         
         self.addSubview(label)
     }
