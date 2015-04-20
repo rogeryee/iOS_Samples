@@ -13,6 +13,8 @@ class SampleListViewController: UIViewController,UITableViewDataSource,UITableVi
     var samples = [
         "HelloWorld",
         "Button",
+        "Text Field",
+        "Switch",
         "ActionSheetView",
         "ActivityIndicator + AlertView",
         "ImageView"
