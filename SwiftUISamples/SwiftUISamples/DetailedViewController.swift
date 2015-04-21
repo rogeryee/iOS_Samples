@@ -38,9 +38,14 @@ class DetailedViewController: UIViewController {
         case "Button" : addView(ButtonSample(frame:self.view.bounds))
         case "Text Field" : addView(TextSample(frame:self.view.bounds))
         case "Switch" : addView(SwitchSample(frame:self.view.bounds))
+        case "Segmented Control" : addView(SegmentedControlSample(frame:self.view.bounds))
         case "ActionSheetView" : addView(ActionSheetSample(frame:self.view.bounds))
         case "ActivityIndicator + AlertView" : addView(ActivityIndicatorAndAlertSample(frame:self.view.bounds))
-        case "ImageView" : self.view.addSubview(HelloWorldSample(frame:self.view.bounds))
+        case "ImageView" : self.view.addSubview(ImageViewSample(frame:self.view.bounds))
+        case "Progress" : self.view.addSubview(ProgressSample(frame:self.view.bounds))
+        case "Slider" : self.view.addSubview(SliderSample(frame:self.view.bounds))
+        case "PickView" : self.view.addSubview(PickViewSample(frame:self.view.bounds))
+        case "Stepper" : self.view.addSubview(StepperSample(frame:self.view.bounds))
         default : return
         }
     }

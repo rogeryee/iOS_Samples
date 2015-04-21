@@ -15,9 +15,14 @@ class SampleListViewController: UIViewController,UITableViewDataSource,UITableVi
         "Button",
         "Text Field",
         "Switch",
+        "Segmented Control",
+        "ImageView",
+        "Progress",
+        "Slider",
         "ActionSheetView",
         "ActivityIndicator + AlertView",
-        "ImageView"
+        "PickView",
+        "Stepper"
     ]
     @IBOutlet weak var tableView: UITableView!
     

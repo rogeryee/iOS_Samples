@@ -12,6 +12,12 @@
 		CA449F461A342518002300B8 /* ActionSheetSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA449F451A342518002300B8 /* ActionSheetSample.swift */; };
 		CA454EAC1AE4C54A00893817 /* TextSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA454EAB1AE4C54A00893817 /* TextSample.swift */; };
 		CA454EAE1AE4CC8000893817 /* SwitchSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA454EAD1AE4CC8000893817 /* SwitchSample.swift */; };
+		CA454EB01AE4CE8000893817 /* SegmentedControlSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA454EAF1AE4CE8000893817 /* SegmentedControlSample.swift */; };
+		CA454EB21AE4D61300893817 /* ImageViewSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA454EB11AE4D61300893817 /* ImageViewSample.swift */; };
+		CA454EB41AE4DA5500893817 /* ProgressSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA454EB31AE4DA5500893817 /* ProgressSample.swift */; };
+		CA454EB61AE4DBE200893817 /* SliderSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA454EB51AE4DBE200893817 /* SliderSample.swift */; };
+		CA454EB81AE4DFB600893817 /* PickViewSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA454EB71AE4DFB600893817 /* PickViewSample.swift */; };
+		CA454EBA1AE4E69000893817 /* StepperSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA454EB91AE4E69000893817 /* StepperSample.swift */; };
 		CA61F8871AE4AD71001B4DB8 /* ButtonSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA61F8861AE4AD71001B4DB8 /* ButtonSample.swift */; };
 		CA98FE271A32F290000FC4C8 /* SampleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA98FE261A32F290000FC4C8 /* SampleView.swift */; };
 		CA98FE2B1A32FCF2000FC4C8 /* HelloWorldSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA98FE2A1A32FCF2000FC4C8 /* HelloWorldSample.swift */; };
@@ -39,6 +45,12 @@
 		CA449F451A342518002300B8 /* ActionSheetSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionSheetSample.swift; sourceTree = "<group>"; };
 		CA454EAB1AE4C54A00893817 /* TextSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextSample.swift; sourceTree = "<group>"; };
 		CA454EAD1AE4CC8000893817 /* SwitchSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchSample.swift; sourceTree = "<group>"; };
+		CA454EAF1AE4CE8000893817 /* SegmentedControlSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentedControlSample.swift; sourceTree = "<group>"; };
+		CA454EB11AE4D61300893817 /* ImageViewSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewSample.swift; sourceTree = "<group>"; };
+		CA454EB31AE4DA5500893817 /* ProgressSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressSample.swift; sourceTree = "<group>"; };
+		CA454EB51AE4DBE200893817 /* SliderSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SliderSample.swift; sourceTree = "<group>"; };
+		CA454EB71AE4DFB600893817 /* PickViewSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickViewSample.swift; sourceTree = "<group>"; };
+		CA454EB91AE4E69000893817 /* StepperSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StepperSample.swift; sourceTree = "<group>"; };
 		CA61F8861AE4AD71001B4DB8 /* ButtonSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonSample.swift; sourceTree = "<group>"; };
 		CA98FE261A32F290000FC4C8 /* SampleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleView.swift; sourceTree = "<group>"; };
 		CA98FE2A1A32FCF2000FC4C8 /* HelloWorldSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelloWorldSample.swift; sourceTree = "<group>"; };
@@ -82,6 +94,12 @@
 				CA61F8861AE4AD71001B4DB8 /* ButtonSample.swift */,
 				CA454EAB1AE4C54A00893817 /* TextSample.swift */,
 				CA454EAD1AE4CC8000893817 /* SwitchSample.swift */,
+				CA454EAF1AE4CE8000893817 /* SegmentedControlSample.swift */,
+				CA454EB11AE4D61300893817 /* ImageViewSample.swift */,
+				CA454EB31AE4DA5500893817 /* ProgressSample.swift */,
+				CA454EB51AE4DBE200893817 /* SliderSample.swift */,
+				CA454EB71AE4DFB600893817 /* PickViewSample.swift */,
+				CA454EB91AE4E69000893817 /* StepperSample.swift */,
 			);
 			name = Samples;
 			sourceTree = "<group>";
@@ -244,7 +262,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CA454EB21AE4D61300893817 /* ImageViewSample.swift in Sources */,
+				CA454EB81AE4DFB600893817 /* PickViewSample.swift in Sources */,
 				CA3C3C9C1A347E9C00803785 /* ActivityIndicatorAndAlertSample.swift in Sources */,
+				CA454EBA1AE4E69000893817 /* StepperSample.swift in Sources */,
+				CA454EB41AE4DA5500893817 /* ProgressSample.swift in Sources */,
+				CA454EB01AE4CE8000893817 /* SegmentedControlSample.swift in Sources */,
+				CA454EB61AE4DBE200893817 /* SliderSample.swift in Sources */,
 				CA18778D1A319E4D0010A1AD /* SampleListViewController.swift in Sources */,
 				CACE423D1A31570600F0A04E /* AppDelegate.swift in Sources */,
 				CA454EAE1AE4CC8000893817 /* SwitchSample.swift in Sources */,
