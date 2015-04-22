@@ -17,7 +17,7 @@ class DetailedViewController: UIViewController {
         
         //设置背景色
         self.view.backgroundColor = UIColor.whiteColor()
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"返回示例列表", style: UIBarButtonItemStyle.Bordered, target: self, action: "btnBackClicked:")
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"返回示例列表", style: UIBarButtonItemStyle.Plain, target: self, action: "btnBackClicked:")
         
         self.loadSample(self.sample)
     }
@@ -46,6 +46,7 @@ class DetailedViewController: UIViewController {
         case "Slider" : self.view.addSubview(SliderSample(frame:self.view.bounds))
         case "PickView" : self.view.addSubview(PickViewSample(frame:self.view.bounds))
         case "Stepper" : self.view.addSubview(StepperSample(frame:self.view.bounds))
+        case "Scroll View" : self.view.addSubview(ScrollViewSample(frame:self.view.bounds))
         default : return
         }
     }

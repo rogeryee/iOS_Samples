@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CA14F6FC1AE74EF80077CE01 /* ScrollViewSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA14F6FB1AE74EF80077CE01 /* ScrollViewSample.swift */; };
 		CA18778D1A319E4D0010A1AD /* SampleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA18778C1A319E4D0010A1AD /* SampleListViewController.swift */; };
 		CA3C3C9C1A347E9C00803785 /* ActivityIndicatorAndAlertSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA3C3C9B1A347E9C00803785 /* ActivityIndicatorAndAlertSample.swift */; };
 		CA449F461A342518002300B8 /* ActionSheetSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA449F451A342518002300B8 /* ActionSheetSample.swift */; };
@@ -40,6 +41,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CA14F6FB1AE74EF80077CE01 /* ScrollViewSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollViewSample.swift; sourceTree = "<group>"; };
 		CA18778C1A319E4D0010A1AD /* SampleListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleListViewController.swift; sourceTree = "<group>"; };
 		CA3C3C9B1A347E9C00803785 /* ActivityIndicatorAndAlertSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorAndAlertSample.swift; sourceTree = "<group>"; };
 		CA449F451A342518002300B8 /* ActionSheetSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionSheetSample.swift; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 				CA454EB51AE4DBE200893817 /* SliderSample.swift */,
 				CA454EB71AE4DFB600893817 /* PickViewSample.swift */,
 				CA454EB91AE4E69000893817 /* StepperSample.swift */,
+				CA14F6FB1AE74EF80077CE01 /* ScrollViewSample.swift */,
 			);
 			name = Samples;
 			sourceTree = "<group>";
@@ -271,6 +274,7 @@
 				CA454EB61AE4DBE200893817 /* SliderSample.swift in Sources */,
 				CA18778D1A319E4D0010A1AD /* SampleListViewController.swift in Sources */,
 				CACE423D1A31570600F0A04E /* AppDelegate.swift in Sources */,
+				CA14F6FC1AE74EF80077CE01 /* ScrollViewSample.swift in Sources */,
 				CA454EAE1AE4CC8000893817 /* SwitchSample.swift in Sources */,
 				CA61F8871AE4AD71001B4DB8 /* ButtonSample.swift in Sources */,
 				CA454EAC1AE4C54A00893817 /* TextSample.swift in Sources */,

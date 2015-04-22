@@ -44,7 +44,7 @@ class PickViewSample: SampleView,UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     //设置选择框各选项的内容，继承于UIPickerViewDelegate协议
-    func pickerView(pickerView: UIPickerView!,titleForRow row: Int,forComponent component: Int) -> String!{
+    func pickerView(pickerView: UIPickerView,titleForRow row: Int,forComponent component: Int) -> String!{
         return String(component) + "-" + String(row)
     }
     

@@ -22,7 +22,8 @@ class SampleListViewController: UIViewController,UITableViewDataSource,UITableVi
         "ActionSheetView",
         "ActivityIndicator + AlertView",
         "PickView",
-        "Stepper"
+        "Stepper",
+        "Scroll View"
     ]
     @IBOutlet weak var tableView: UITableView!
     
