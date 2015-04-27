@@ -47,6 +47,7 @@ class DetailedViewController: UIViewController {
         case "PickView" : self.view.addSubview(PickViewSample(frame:self.view.bounds))
         case "Stepper" : self.view.addSubview(StepperSample(frame:self.view.bounds))
         case "Scroll View" : self.view.addSubview(ScrollViewSample(frame:self.view.bounds))
+        case "Date Picker" : self.view.addSubview(DatePickerSample(frame:self.view.bounds))
         default : return
         }
     }

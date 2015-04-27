@@ -19,6 +19,7 @@
 		CA454EB61AE4DBE200893817 /* SliderSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA454EB51AE4DBE200893817 /* SliderSample.swift */; };
 		CA454EB81AE4DFB600893817 /* PickViewSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA454EB71AE4DFB600893817 /* PickViewSample.swift */; };
 		CA454EBA1AE4E69000893817 /* StepperSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA454EB91AE4E69000893817 /* StepperSample.swift */; };
+		CA535D871AEE14FD0006C331 /* DatePickerSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA535D861AEE14FD0006C331 /* DatePickerSample.swift */; };
 		CA61F8871AE4AD71001B4DB8 /* ButtonSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA61F8861AE4AD71001B4DB8 /* ButtonSample.swift */; };
 		CA98FE271A32F290000FC4C8 /* SampleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA98FE261A32F290000FC4C8 /* SampleView.swift */; };
 		CA98FE2B1A32FCF2000FC4C8 /* HelloWorldSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA98FE2A1A32FCF2000FC4C8 /* HelloWorldSample.swift */; };
@@ -53,6 +54,7 @@
 		CA454EB51AE4DBE200893817 /* SliderSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SliderSample.swift; sourceTree = "<group>"; };
 		CA454EB71AE4DFB600893817 /* PickViewSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickViewSample.swift; sourceTree = "<group>"; };
 		CA454EB91AE4E69000893817 /* StepperSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StepperSample.swift; sourceTree = "<group>"; };
+		CA535D861AEE14FD0006C331 /* DatePickerSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerSample.swift; sourceTree = "<group>"; };
 		CA61F8861AE4AD71001B4DB8 /* ButtonSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonSample.swift; sourceTree = "<group>"; };
 		CA98FE261A32F290000FC4C8 /* SampleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleView.swift; sourceTree = "<group>"; };
 		CA98FE2A1A32FCF2000FC4C8 /* HelloWorldSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelloWorldSample.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 				CA454EB71AE4DFB600893817 /* PickViewSample.swift */,
 				CA454EB91AE4E69000893817 /* StepperSample.swift */,
 				CA14F6FB1AE74EF80077CE01 /* ScrollViewSample.swift */,
+				CA535D861AEE14FD0006C331 /* DatePickerSample.swift */,
 			);
 			name = Samples;
 			sourceTree = "<group>";
@@ -272,6 +275,7 @@
 				CA454EB41AE4DA5500893817 /* ProgressSample.swift in Sources */,
 				CA454EB01AE4CE8000893817 /* SegmentedControlSample.swift in Sources */,
 				CA454EB61AE4DBE200893817 /* SliderSample.swift in Sources */,
+				CA535D871AEE14FD0006C331 /* DatePickerSample.swift in Sources */,
 				CA18778D1A319E4D0010A1AD /* SampleListViewController.swift in Sources */,
 				CACE423D1A31570600F0A04E /* AppDelegate.swift in Sources */,
 				CA14F6FC1AE74EF80077CE01 /* ScrollViewSample.swift in Sources */,

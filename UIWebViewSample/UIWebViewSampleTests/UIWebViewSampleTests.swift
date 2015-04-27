@@ -1,15 +1,15 @@
 //
-//  UIDatePickerSampleTests.swift
-//  UIDatePickerSampleTests
+//  UIWebViewSampleTests.swift
+//  UIWebViewSampleTests
 //
-//  Created by Roger Yee on 4/23/15.
+//  Created by Roger Yee on 4/27/15.
 //  Copyright (c) 2015 Roger Yee. All rights reserved.
 //
 
 import UIKit
 import XCTest
 
-class UIDatePickerSampleTests: XCTestCase {
+class UIWebViewSampleTests: XCTestCase {
     
     override func setUp() {
         super.setUp()

@@ -4,7 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>UIDatePickerSample.xcscheme</key>
+		<key>UIWebViewSample.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -12,12 +12,12 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>CA8EFED51AE892A600B796A2</key>
+		<key>CA535D601AEE0D600006C331</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>CA8EFEEA1AE892A600B796A2</key>
+		<key>CA535D751AEE0D600006C331</key>
 		<dict>
 			<key>primary</key>
 			<true/>

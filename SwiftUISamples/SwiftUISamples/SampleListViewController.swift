@@ -23,7 +23,8 @@ class SampleListViewController: UIViewController,UITableViewDataSource,UITableVi
         "ActivityIndicator + AlertView",
         "PickView",
         "Stepper",
-        "Scroll View"
+        "Scroll View",
+        "Date Picker"
     ]
     @IBOutlet weak var tableView: UITableView!
     
@@ -35,6 +36,7 @@ class SampleListViewController: UIViewController,UITableViewDataSource,UITableVi
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "SampleCell")
+        self.tableView.scrollEnabled = true;
     }
     
     override func didReceiveMemoryWarning() {

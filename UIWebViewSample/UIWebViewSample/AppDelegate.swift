@@ -1,8 +1,8 @@
 //
 //  AppDelegate.swift
-//  UIDatePickerSample
+//  UIWebViewSample
 //
-//  Created by Roger Yee on 4/23/15.
+//  Created by Roger Yee on 4/27/15.
 //  Copyright (c) 2015 Roger Yee. All rights reserved.
 //
 
