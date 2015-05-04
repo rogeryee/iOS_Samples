@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>05EB726F-B9CE-468A-86CA-DA31F80B1AA9</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>UIWebViewSample</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>EE843D9682BB547321274B6184FE377C45DF3EF3</key>
 		<string>https://github.com/rogeryee/iOS_Samples.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>UIWebViewSample/UIWebViewSample.xcodeproj/project.xcworkspace</string>
+	<string>UIWebViewSample/UIWebViewSample.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>EE843D9682BB547321274B6184FE377C45DF3EF3</key>

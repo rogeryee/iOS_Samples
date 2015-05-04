@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -13,40 +14,51 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" translatesAutoresizingMaskIntoConstraints="NO" id="jy8-30-tOC">
-                                <rect key="frame" x="23" y="28" width="275" height="29"/>
-                                <segments>
-                                    <segment title="显示HTML"/>
-                                    <segment title="显示本地PDF"/>
-                                    <segment title="loadData"/>
-                                </segments>
-                                <connections>
-                                    <action selector="typeChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="LtC-SU-ztf"/>
-                                </connections>
-                            </segmentedControl>
-                            <webView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eGz-aG-R6C">
-                                <rect key="frame" x="16" y="89" width="288" height="459"/>
+                            <webView contentMode="scaleToFill" misplaced="YES" scalesPageToFit="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iiJ-V5-Q0Z">
+                                <rect key="frame" x="145" y="74" width="240" height="128"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="JTG-nj-ePQ"/>
+                                </connections>
                             </webView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="jFz-wD-ejY">
+                                <rect key="frame" x="255" y="234" width="37" height="37"/>
+                                <color key="color" red="0.36078431370000003" green="0.63921568630000003" blue="0.99607843139999996" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入网址" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="KXA-Tw-ned">
+                                <rect key="frame" x="217" y="28" width="97" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="O2U-6y-duR"/>
+                                </connections>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="jFz-wD-ejY" secondAttribute="centerX" id="4Vd-2W-WbD"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="iiJ-V5-Q0Z" secondAttribute="trailing" id="6bO-jg-v7y"/>
+                            <constraint firstAttribute="centerY" secondItem="jFz-wD-ejY" secondAttribute="centerY" id="CN2-dN-ajI"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="iiJ-V5-Q0Z" secondAttribute="bottom" id="IER-0z-ZLh"/>
+                            <constraint firstItem="iiJ-V5-Q0Z" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="RYR-Ss-rjJ"/>
+                            <constraint firstItem="iiJ-V5-Q0Z" firstAttribute="top" secondItem="KXA-Tw-ned" secondAttribute="bottom" constant="37" id="Vo4-s0-FVO"/>
+                            <constraint firstItem="KXA-Tw-ned" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="hAl-ek-caV"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="KXA-Tw-ned" secondAttribute="trailing" id="q13-8l-XOR"/>
+                            <constraint firstItem="KXA-Tw-ned" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="5" id="rPW-9y-Da4"/>
+                        </constraints>
                     </view>
                     <connections>
-                        <outlet property="loadType" destination="jy8-30-tOC" id="tVa-HO-ML7"/>
-                        <outlet property="webview" destination="eGz-aG-R6C" id="gQ3-YU-R97"/>
+                        <outlet property="activitor" destination="jFz-wD-ejY" id="8hJ-Wl-oZN"/>
+                        <outlet property="textfield" destination="KXA-Tw-ned" id="vPs-Ab-0R0"/>
+                        <outlet property="webview" destination="iiJ-V5-Q0Z" id="mfP-f2-sos"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="200" y="319"/>
+            <point key="canvasLocation" x="375" y="336.97183098591546"/>
         </scene>
     </scenes>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4"/>
-    </simulatedMetricsContainer>
 </document>
