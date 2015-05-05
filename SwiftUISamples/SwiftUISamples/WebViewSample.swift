@@ -22,7 +22,7 @@ class WebViewSample: SampleView,UIWebViewDelegate {
         
         webview = UIWebView(frame: CGRectMake(0, 150, 400,500))
         webview.delegate = self
-        //webview.loadRequest(NSURLRequest(URL: NSURL(string: "http://www.baidu.com")!))
+        webview.scalesPageToFit = true
         self.addSubview(webview)
         
         loadType.selectedSegmentIndex = 0
