@@ -25,7 +25,9 @@ class SampleListViewController: UIViewController,UITableViewDataSource,UITableVi
         "Stepper",
         "Scroll View",
         "Date Picker",
-        "Web View"
+        "Web View",
+        "Web Browser",
+        "NSLayoutConstraint"
     ]
     @IBOutlet weak var tableView: UITableView!
     
