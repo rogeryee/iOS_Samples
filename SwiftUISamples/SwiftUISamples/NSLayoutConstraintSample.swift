@@ -10,13 +10,18 @@ import UIKit
 
 class NSLayoutConstraintSample: SampleView {
     
+    var label1:UILabel!
+    var label2:UILabel!
+    var label3:UILabel!
+    
     override func loadView() {
-        firstSample()
-        //secondSample()
+        println("load NSLayoutConstraintSample")
+//        firstSample()
+        secondSample()
     }
     
     func firstSample() {
-        var label1 = UILabel(frame: CGRectMake(0, 160, 40,30))
+        label1 = UILabel(frame: CGRectMake(0, 160, 40,30))
         label1.textColor=UIColor.blackColor()
         label1.backgroundColor=UIColor.greenColor()
         label1.textAlignment = NSTextAlignment.Center
@@ -25,7 +30,7 @@ class NSLayoutConstraintSample: SampleView {
         label1.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.addSubview(label1)
         
-        var label2 = UILabel(frame: CGRectMake(0, 160, 40,30))
+        label2 = UILabel(frame: CGRectMake(0, 160, 40,30))
         label2.textColor=UIColor.blackColor()
         label2.backgroundColor=UIColor.yellowColor()
         label2.textAlignment = NSTextAlignment.Center
@@ -34,7 +39,7 @@ class NSLayoutConstraintSample: SampleView {
         label2.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.addSubview(label2)
         
-        var label3 = UILabel(frame: CGRectMake(0, 160, 40,30))
+        label3 = UILabel(frame: CGRectMake(0, 160, 40,30))
         label3.textColor=UIColor.blackColor()
         label3.backgroundColor=UIColor.blueColor()
         label3.textAlignment = NSTextAlignment.Center
@@ -43,6 +48,10 @@ class NSLayoutConstraintSample: SampleView {
         label3.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.addSubview(label3)
         
+        addConstraints()
+    }
+    
+    func addConstraints() {
         // Add Constraints
         let views = ["superview":self,"label1": label1,"label2":label2,"label3":label3]
         
@@ -61,6 +70,27 @@ class NSLayoutConstraintSample: SampleView {
         self.addConstraints([NSLayoutConstraint(item: label3, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0)])
         // label3.center.y = superview.center.y * 1.0 + 0.0
         self.addConstraints([NSLayoutConstraint(item: label3, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: 0.0)])
+    }
+    
+    func secondSample() {
+        
+        var blueView = UIView();
+        blueView.backgroundColor = UIColor.blueColor()
+        
+        var greenView = UIView();
+        greenView.backgroundColor = UIColor.greenColor()
+        
+        self.addSubview(blueView);
+        self.addSubview(greenView);
+        
+        greenView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        blueView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        
+        let views = ["green": greenView,"blue":blueView]
+        
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[blue]-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-[blue]-(==30)-[green(==blue)]-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("|-[green(==blue)]-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
         
     }
 }
