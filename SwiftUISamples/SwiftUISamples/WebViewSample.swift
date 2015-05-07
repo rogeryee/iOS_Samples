@@ -16,14 +16,21 @@ class WebViewSample: SampleView,UIWebViewDelegate {
     override func loadView() {
         
         loadType=UISegmentedControl(items:["显示HTML","百度","本地文件","loadData"])
-        loadType.center = CGPoint(x:self.center.x, y:100)
         loadType.addTarget(self, action: "typeChanged:", forControlEvents: UIControlEvents.ValueChanged)
+        loadType.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.addSubview(loadType)
         
-        webview = UIWebView(frame: CGRectMake(0, 150, 400,500))
+        webview = UIWebView()
         webview.delegate = self
         webview.scalesPageToFit = true
+        webview.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.addSubview(webview)
+        
+        let views = ["loadType": loadType,"webview":webview]
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-100-[loadType]-[webview]-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[webview]-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        
+        self.addConstraints([NSLayoutConstraint(item: loadType, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0)])
         
         loadType.selectedSegmentIndex = 0
         typeChanged(loadType)

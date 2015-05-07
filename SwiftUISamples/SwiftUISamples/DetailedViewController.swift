@@ -33,26 +33,36 @@ class DetailedViewController: UIViewController {
     }
     
     func loadSample(sample:String) {
+        
+        var view:SampleView!;
+        
         switch sample {
-        case "HelloWorld" : addView(HelloWorldSample(frame:self.view.bounds))
-        case "Button" : addView(ButtonSample(frame:self.view.bounds))
-        case "Text Field" : addView(TextSample(frame:self.view.bounds))
-        case "Switch" : addView(SwitchSample(frame:self.view.bounds))
-        case "Segmented Control" : addView(SegmentedControlSample(frame:self.view.bounds))
-        case "ActionSheetView" : addView(ActionSheetSample(frame:self.view.bounds))
-        case "ActivityIndicator + AlertView" : addView(ActivityIndicatorAndAlertSample(frame:self.view.bounds))
-        case "ImageView" : self.view.addSubview(ImageViewSample(frame:self.view.bounds))
-        case "Progress" : self.view.addSubview(ProgressSample(frame:self.view.bounds))
-        case "Slider" : self.view.addSubview(SliderSample(frame:self.view.bounds))
-        case "PickView" : self.view.addSubview(PickViewSample(frame:self.view.bounds))
-        case "Stepper" : self.view.addSubview(StepperSample(frame:self.view.bounds))
-        case "Scroll View" : self.view.addSubview(ScrollViewSample(frame:self.view.bounds))
-        case "Date Picker" : self.view.addSubview(DatePickerSample(frame:self.view.bounds))
-        case "Web View" : self.view.addSubview(WebViewSample(frame:self.view.bounds))
-        case "Web Browser" : self.view.addSubview(WebBrowserSample(frame:self.view.bounds))
-        case "NSLayoutConstraint" : self.view.addSubview(NSLayoutConstraintSample(frame:self.view.bounds))
+        case "HelloWorld" : view = HelloWorldSample()
+        case "Button" : view = ButtonSample()
+        case "Text Field" : view = TextSample()
+        case "Switch" : view = SwitchSample()
+        case "Segmented Control" : view = SegmentedControlSample()
+        case "ActionSheetView" : view = ActionSheetSample()
+        case "ActivityIndicator + AlertView" : view = ActivityIndicatorAndAlertSample()
+        case "ImageView" : view = ImageViewSample()
+        case "Progress" : view = ProgressSample()
+        case "Slider" : view = SliderSample()
+        case "PickView" : view = PickViewSample()
+        case "Stepper" : view = StepperSample()
+        case "Scroll View" : view = ScrollViewSample()
+        case "Date Picker" : view = DatePickerSample()
+        case "Web View" : view = WebViewSample()
+        case "Web Browser" : view = WebBrowserSample()
+        case "NSLayoutConstraint" : view = NSLayoutConstraintSample()
         default : return
         }
+        
+        view.loadView()
+        view.setTranslatesAutoresizingMaskIntoConstraints(false)
+        addView(view)
+        
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("|[view]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: ["view":view]))
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[view]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: ["view":view]))
     }
     
     func addView(view:UIView) {

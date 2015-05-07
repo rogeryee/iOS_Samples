@@ -34,7 +34,14 @@ class SliderSample: SampleView {
         
         slider.addTarget(self,action:"sliderDidchange:", forControlEvents:UIControlEvents.ValueChanged)
         
+        slider.setTranslatesAutoresizingMaskIntoConstraints(false
+        )
         self.addSubview(slider)
+        
+        let views = ["slider": slider]
+        
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[slider]-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        self.addConstraints([NSLayoutConstraint(item: slider, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: 0.0)])
     }
     
     func sliderDidchange(slider:UISlider){

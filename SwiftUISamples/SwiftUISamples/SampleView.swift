@@ -10,14 +10,14 @@ import UIKit
 
 class SampleView : UIView {
     
-    override init(frame aRect: CGRect) {
-        super.init(frame: aRect)
-        loadView()
-    }
-    
-    required init(coder aDecoder: NSCoder) {
-        super.init(coder : aDecoder)
-    }
+//    override init(frame aRect: CGRect) {
+//        super.init(frame: aRect)
+//        loadView()
+//    }
+//    
+//    required init(coder aDecoder: NSCoder) {
+//        super.init(coder : aDecoder)
+//    }
     
     // This method should be overrided by sub-classes.
     func loadView() {

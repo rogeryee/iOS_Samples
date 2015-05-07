@@ -18,6 +18,11 @@ class ProgressSample: SampleView {
         progressView.setProgress(0.8,animated:true)
         progressView.progressTintColor=UIColor.greenColor()
         progressView.trackTintColor=UIColor.blueColor()
+        progressView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        
         self.addSubview(progressView);
+        
+        self.addConstraints([NSLayoutConstraint(item: progressView, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0)])
+        self.addConstraints([NSLayoutConstraint(item: progressView, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: 0.0)])
     }
 }

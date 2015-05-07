@@ -22,6 +22,7 @@ class PickViewSample: SampleView,UIPickerViewDelegate, UIPickerViewDataSource {
         pickerView.selectRow(1,inComponent:0,animated:true)
         pickerView.selectRow(3,inComponent:1,animated:true)
         pickerView.selectRow(4,inComponent:2,animated:true)
+        pickerView.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.addSubview(pickerView)
         
         //建立一个按钮，触摸按钮时获得选择框被选择的索引
@@ -30,7 +31,13 @@ class PickViewSample: SampleView,UIPickerViewDelegate, UIPickerViewDataSource {
         button.backgroundColor=UIColor.blueColor()
         button.setTitle("获取信息",forState:.Normal)
         button.addTarget(self, action:"getPickerViewValue", forControlEvents: UIControlEvents.TouchUpInside)
+        button.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.addSubview(button)
+        
+        let views = ["button": button,"pickerView":pickerView]
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-[pickerView]-[button]-(>=100,<=400)-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        self.addConstraints([NSLayoutConstraint(item: button, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0)])
+        self.addConstraints([NSLayoutConstraint(item: pickerView, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0)])
     }
     
     //设置选择框的列数为3列,继承于UIPickerViewDataSource协议

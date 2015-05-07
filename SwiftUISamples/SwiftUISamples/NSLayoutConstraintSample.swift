@@ -16,8 +16,8 @@ class NSLayoutConstraintSample: SampleView {
     
     override func loadView() {
         println("load NSLayoutConstraintSample")
-//        firstSample()
-        secondSample()
+        firstSample()
+//        secondSample()
     }
     
     func firstSample() {

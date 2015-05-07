@@ -19,6 +19,7 @@ class DatePickerSample: SampleView {
         dateTimePicker = UIDatePicker(frame: CGRectMake(10, 100, 100, 180))
         dateTimePicker.locale = NSLocale(localeIdentifier: "zh_CN")
         dateTimePicker.addTarget(self, action: Selector("dateTimeChanged:"), forControlEvents: UIControlEvents.ValueChanged)
+        dateTimePicker.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.addSubview(dateTimePicker)
         
         dateTimeLabel = UILabel(frame:CGRectMake(50, 350, 200, 30))
@@ -27,13 +28,26 @@ class DatePickerSample: SampleView {
         dateTimeLabel.textAlignment = NSTextAlignment.Center
         dateTimeLabel.font = UIFont(name:"Zapfino", size:10)
         dateTimeLabel.lineBreakMode = NSLineBreakMode.ByTruncatingMiddle
+        dateTimeLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.addSubview(dateTimeLabel)
         
         showDateTimeButton = UIButton(frame:CGRectMake(50, 400, 100, 30))
         showDateTimeButton.setTitle("查看时间", forState: UIControlState.Normal)
         showDateTimeButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
         showDateTimeButton.addTarget(self,action:Selector("showDateTime:"),forControlEvents:UIControlEvents.TouchUpInside)
+        showDateTimeButton.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.addSubview(showDateTimeButton)
+        
+        let views = ["dateTimePicker": dateTimePicker,"dateTimeLabel":dateTimeLabel,"showDateTimeButton":showDateTimeButton]
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[dateTimePicker(>=100)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[dateTimeLabel(>=100)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[showDateTimeButton(>=30)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-100-[dateTimePicker(>=100)]-[dateTimeLabel(==30)]-[showDateTimeButton(==30)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        
+        
+        self.addConstraints([NSLayoutConstraint(item: dateTimePicker, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0)])
+        self.addConstraints([NSLayoutConstraint(item: dateTimeLabel, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0)])
+        self.addConstraints([NSLayoutConstraint(item: showDateTimeButton, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0)])
     }
     
     

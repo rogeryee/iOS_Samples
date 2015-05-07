@@ -26,7 +26,13 @@ class ScrollViewSample: SampleView, UIScrollViewDelegate {
         scrollView.contentSize=imageView.bounds.size;
         scrollView.addSubview(imageView);
         
+        scrollView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        
         self.addSubview(scrollView)
+        
+        let views = ["scrollView": scrollView]
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[scrollView]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[scrollView]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
     }
     
     func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
