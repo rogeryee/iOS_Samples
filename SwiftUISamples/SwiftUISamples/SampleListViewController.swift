@@ -27,7 +27,8 @@ class SampleListViewController: UIViewController,UITableViewDataSource,UITableVi
         "Date Picker",
         "Web View",
         "Web Browser",
-        "NSLayoutConstraint"
+        "NSLayoutConstraint",
+        "TableView(WeChat)"
     ]
     @IBOutlet weak var tableView: UITableView!
     

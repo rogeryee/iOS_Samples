@@ -54,6 +54,7 @@ class DetailedViewController: UIViewController {
         case "Web View" : view = WebViewSample()
         case "Web Browser" : view = WebBrowserSample()
         case "NSLayoutConstraint" : view = NSLayoutConstraintSample()
+        case "TableView(WeChat)" : view = TableViewSample()
         default : return
         }
         
