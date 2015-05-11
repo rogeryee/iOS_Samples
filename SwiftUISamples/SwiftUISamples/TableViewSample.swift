@@ -12,22 +12,31 @@ class TableViewSample: SampleView, ChatDataSource {
     
     var chats : [Message]!
     var tableView : TableView!
+    var sendView : UIView!
     
     override func loadView() {
         
         self.loadChatData()
-        
         self.tableView = TableView(frame:CGRectMake(0, 20, self.frame.size.width, self.frame.size.height - 20))
         self.tableView.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.tableView!.registerClass(TableViewCell.self, forCellReuseIdentifier: "MsgCell")
         self.tableView.chatDataSource = self
         self.tableView.reloadData()
         self.addSubview(self.tableView)
-
-        let views = ["tableView": self.tableView]
         
+        self.sendView = SendView()
+        self.sendView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.addSubview(self.sendView)
+        
+        // Add Constraints
+        var views = ["tableView": self.tableView,"sendView":self.sendView]
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[tableView]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-70-[tableView]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[sendView]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-70-[tableView]-[sendView(==50)]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        
+        // Scroll to Bottom
+        var index = NSIndexPath(forRow: self.tableView.numberOfRowsInSection(0)-1, inSection: 0)
+        self.tableView.scrollToRowAtIndexPath(index, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
     }
     
     func loadChatData() {
@@ -54,12 +63,76 @@ class TableViewSample: SampleView, ChatDataSource {
     }
 }
 
+class SendView:UIView, UITextFieldDelegate {
+    var msgTextField : UITextField!
+    var senderBtn : UIButton!
+    
+    override init(frame aRect: CGRect) {
+        super.init(frame: aRect)
+        
+        self.backgroundColor = UIColor.blueColor()
+        self.setTranslatesAutoresizingMaskIntoConstraints(false)
+        
+        msgTextField = UITextField()
+        msgTextField.backgroundColor = UIColor.whiteColor()
+        msgTextField.textColor=UIColor.blackColor()
+        msgTextField.font=UIFont.boldSystemFontOfSize(12)
+        msgTextField.layer.cornerRadius = 10.0
+        msgTextField.returnKeyType = UIReturnKeyType.Send
+        msgTextField.delegate=self
+        msgTextField.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.addSubview(msgTextField)
+
+        senderBtn = UIButton()
+        senderBtn.backgroundColor=UIColor.lightGrayColor()
+        senderBtn.addTarget(self, action:Selector("sendMessage") ,forControlEvents:UIControlEvents.TouchUpInside)
+        senderBtn.layer.cornerRadius=6.0
+        senderBtn.setTitle("Send", forState:UIControlState.Normal)
+        senderBtn.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.addSubview(senderBtn)
+        
+        // Add Constraints
+        let views = ["msgTextField": msgTextField,"senderBtn":senderBtn]
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[msgTextField]-[senderBtn(==50)]-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-[msgTextField]-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-[senderBtn]-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+    }
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder : aDecoder)
+    }
+    
+    func textFieldShouldReturn(textField:UITextField) -> Bool
+    {
+        sendMessage()
+        return true
+    }
+    
+    func sendMessage()
+    {
+//        //composing=false
+//        var sender = txtMsg
+//        
+//        var thisChat =  MessageItem(body:sender.text, user:me, date:NSDate(), mtype:ChatType.Mine)
+//        
+//        var thatChat =  MessageItem(body:"你说的是：\(sender.text)!", user:you, date:NSDate(), mtype:ChatType.Someone)
+//        
+//        Chats.addObject(thisChat)
+//        Chats.addObject(thatChat)
+//        self.tableView.chatDataSource = self
+//        self.tableView.reloadData()
+//        
+//        //self.showTableView()
+//        sender.resignFirstResponder()
+//        sender.text = ""
+    }
+}
+
 class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
     var bubbleSection:Array<Message>!
     var chatDataSource:ChatDataSource!
     
     required init(coder aDecoder: NSCoder) {
-        
         super.init(coder: aDecoder)
     }
     
@@ -75,6 +148,8 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
         self.bubbleSection = Array<Message>()
         self.delegate = self
         self.dataSource = self
+        
+        println("init tableview")
     }
     
     //按日期排序方法
@@ -103,6 +178,7 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
             }
         }
         super.reloadData()
+        println("reloadData")
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -110,12 +186,7 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (section >= self.bubbleSection.count)
-        {
-            return 1
-        }
-        
-        return self.bubbleSection.count+1
+        return self.bubbleSection.count
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -155,6 +226,8 @@ class TableViewCell:UITableViewCell {
         super.init(style:UITableViewCellStyle.Default, reuseIdentifier:cellId)
         
         render()
+        
+        println("init cell")
     }
 
     required init(coder aDecoder: NSCoder) {
@@ -234,73 +307,6 @@ class TableViewCell:UITableViewCell {
         
         constraint = "V:|-customViewTopOffset-[customView]"
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat(constraint, options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
-    }
-    
-    func render_() {
-        self.selectionStyle = UITableViewCellSelectionStyle.None
-        
-        if(self.bubbleImage==nil) {
-            self.bubbleImage = UIImageView()
-            self.addSubview(self.bubbleImage)
-        }
-        
-        var type = self.message.mtype
-        var width = self.message.view.frame.width
-        var height = self.message.view.frame.height
-        
-        println("self.message.view.frame.width = \(width), self.message.view.frame.height = \(height)")
-        println("self.frame.size.width = \(width), self.frame.size.height = \(height)")
-        
-        var x = (type == ChatType.Mine ? self.frame.size.width - width - self.message.insets.left - self.message.insets.right : 0)
-        var y:CGFloat = 0
-        
-        if(self.message.logo != "") {
-            var logo = self.message.logo
-            
-            self.logoImage = UIImageView(image: UIImage(named:(logo)))
-            self.logoImage.layer.cornerRadius = 9.0
-            self.logoImage.layer.masksToBounds = true
-            self.logoImage.layer.borderColor = UIColor(white: 0.0, alpha: 0.2).CGColor
-            self.logoImage.layer.borderWidth = 1.0
-            
-            var avatarX =  (type == ChatType.Other) ? 2 : self.frame.size.width
-            var avatarY = 0 as CGFloat
-            
-            println("avatarX = \(avatarX), avatarY = \(avatarY)")
-            
-            self.logoImage.frame = CGRectMake(avatarX, avatarY, 50, 50)
-            self.addSubview(self.logoImage)
-            
-                        var delta =  self.frame.size.height - (self.message.insets.top + self.message.insets.bottom + self.message.view.frame.size.height)
-                        if (delta > 0)
-                        {
-                            y = delta
-                        }
-                        if (type == ChatType.Other)
-                        {
-                            x += 54
-                        }
-                        if (type == ChatType.Mine)
-                        {
-                            x -= 54
-                        }
-        }
-        
-                self.customView = self.message.view
-                self.customView.frame = CGRectMake(x + self.message.insets.left, y + self.message.insets.top, width, height)
-        
-                self.addSubview(self.customView)
-        
-        //如果是别人的消息，在左边，如果是我输入的消息，在右边
-                if (type == ChatType.Other)
-                {
-                    self.bubbleImage.image = UIImage(named:("yoububble.png"))!.stretchableImageWithLeftCapWidth(21,topCapHeight:14)
-        
-                }
-                else {
-                    self.bubbleImage.image = UIImage(named:"mebubble.png")!.stretchableImageWithLeftCapWidth(15, topCapHeight:14)
-                }
-                self.bubbleImage.frame = CGRectMake(x, y, width + self.message.insets.left + self.message.insets.right, height + self.message.insets.top + self.message.insets.bottom)
     }
 }
 
