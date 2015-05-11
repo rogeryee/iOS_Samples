@@ -8,23 +8,22 @@
 
 import UIKit
 
-class TableViewSample: SampleView, ChatDataSource {
+class TableViewSample: SampleView {
     
-    var chats : [Message]!
+    var chats : NSMutableArray!
     var tableView : TableView!
-    var sendView : UIView!
+    var sendView : SendView!
     
     override func loadView() {
         
-        self.loadChatData()
         self.tableView = TableView(frame:CGRectMake(0, 20, self.frame.size.width, self.frame.size.height - 20))
         self.tableView.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.tableView!.registerClass(TableViewCell.self, forCellReuseIdentifier: "MsgCell")
-        self.tableView.chatDataSource = self
         self.tableView.reloadData()
         self.addSubview(self.tableView)
         
         self.sendView = SendView()
+        self.sendView.parent = self
         self.sendView.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.addSubview(self.sendView)
         
@@ -33,43 +32,41 @@ class TableViewSample: SampleView, ChatDataSource {
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[tableView]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[sendView]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-70-[tableView]-[sendView(==50)]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
-        
-        // Scroll to Bottom
-        var index = NSIndexPath(forRow: self.tableView.numberOfRowsInSection(0)-1, inSection: 0)
-        self.tableView.scrollToRowAtIndexPath(index, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
     }
     
-    func loadChatData() {
-        var me = "xiaoming.png"
-        var you = "xiaohua.png"
+    func sendMessage(message:Message) {
+        tableView.addMessage(message)
+    }
+}
+
+class DemoData {
+    var data : [Message]!
+    init() {
+        var me = User(name:"me",logo:"xiaoming.png")
+        var you = User(name:"you",logo:"xiaohua.png")
         
-        var first =  Message(body:"嘿，这张照片咋样，我在泸沽湖拍的呢！", logo:me,  date:NSDate(timeIntervalSinceNow:-600), mtype:ChatType.Mine)
-        var second =  Message(image:UIImage(named:"luguhu.jpeg")!,logo:me, date:NSDate(timeIntervalSinceNow:-290), mtype:ChatType.Mine)
-        var third =  Message(body:"太赞了，我也想去那看看呢！",logo:you, date:NSDate(timeIntervalSinceNow:-60), mtype:ChatType.Other)
-        var fouth =  Message(body:"嗯，下次我们一起去吧！",logo:me, date:NSDate(timeIntervalSinceNow:-20), mtype:ChatType.Mine)
-        var fifth =  Message(body:"好的，一定！",logo:you, date:NSDate(timeIntervalSinceNow:0), mtype:ChatType.Other)
+        var first =  Message(body:"嘿，这张照片咋样，我在泸沽湖拍的呢！", user:me,  date:NSDate(timeIntervalSinceNow:-6000), mtype:ChatType.Mine)
+        var second =  Message(image:UIImage(named:"luguhu.jpeg")!,user:me, date:NSDate(timeIntervalSinceNow:-2900), mtype:ChatType.Mine)
+        var third =  Message(body:"太赞了，我也想去那看看呢！",user:you, date:NSDate(timeIntervalSinceNow:-1000), mtype:ChatType.Other)
+        var fouth =  Message(body:"嗯，下次我们一起去吧！",user:me, date:NSDate(timeIntervalSinceNow:-200), mtype:ChatType.Mine)
+        var fifth =  Message(body:"好的，一定！",user:you, date:NSDate(timeIntervalSinceNow:-10), mtype:ChatType.Other)
         
-        chats = [first,second, third, fouth, fifth]
+        data = [first,second, third, fouth, fifth]
     }
     
-    func rowsForChatTable(tableView:TableView) -> Int
-    {
-        return self.chats.count
-    }
-    
-    func chatTableView(tableView:TableView, dataForRow row:Int) -> Message
-    {
-        return self.chats[row]
+    func getData() -> [Message] {
+        return self.data
     }
 }
 
 class SendView:UIView, UITextFieldDelegate {
+    var parent:TableViewSample!
     var msgTextField : UITextField!
     var senderBtn : UIButton!
     
     override init(frame aRect: CGRect) {
         super.init(frame: aRect)
-        
+
         self.backgroundColor = UIColor.blueColor()
         self.setTranslatesAutoresizingMaskIntoConstraints(false)
         
@@ -110,27 +107,25 @@ class SendView:UIView, UITextFieldDelegate {
     
     func sendMessage()
     {
-//        //composing=false
-//        var sender = txtMsg
-//        
-//        var thisChat =  MessageItem(body:sender.text, user:me, date:NSDate(), mtype:ChatType.Mine)
-//        
-//        var thatChat =  MessageItem(body:"你说的是：\(sender.text)!", user:you, date:NSDate(), mtype:ChatType.Someone)
-//        
-//        Chats.addObject(thisChat)
-//        Chats.addObject(thatChat)
-//        self.tableView.chatDataSource = self
-//        self.tableView.reloadData()
-//        
-//        //self.showTableView()
-//        sender.resignFirstResponder()
-//        sender.text = ""
+        var sender = self.msgTextField
+        
+        var me = User(name:"me",logo:"xiaoming.png")
+        var you = User(name:"you",logo:"xiaohua.png")
+        
+        var thisChat =  Message(body:sender.text, user:me, date:NSDate(timeIntervalSinceNow:0), mtype:ChatType.Mine)
+        var thatChat =  Message(body:"你说的是：\(sender.text)!", user:you, date:NSDate(timeIntervalSinceNow:10), mtype:ChatType.Other)
+        
+        parent.sendMessage(thisChat)
+        parent.sendMessage(thatChat)
+        
+        sender.resignFirstResponder()
+        sender.text = ""
     }
 }
 
 class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
+    
     var bubbleSection:Array<Message>!
-    var chatDataSource:ChatDataSource!
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -142,14 +137,15 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
         
         self.backgroundColor = UIColor.clearColor()
         self.separatorStyle = UITableViewCellSeparatorStyle.None
-//        self.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
-//        self.layer.borderWidth = 1
-//        self.layer.borderColor = UIColor.blackColor().CGColor
-        self.bubbleSection = Array<Message>()
+        self.bubbleSection = DemoData().getData()
+        
         self.delegate = self
         self.dataSource = self
-        
-        println("init tableview")
+    }
+    
+    func addMessage(message:Message) {
+        bubbleSection.append(message)
+        reloadData()
     }
     
     //按日期排序方法
@@ -162,23 +158,12 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
         self.showsVerticalScrollIndicator = false
         self.showsHorizontalScrollIndicator = false
         
-        var count =  0
-        if ((self.chatDataSource != nil))
-        {
-            count = self.chatDataSource.rowsForChatTable(self)
-            
-            if(count > 0)
-            {
-                for (var i = 0; i < count; i++)
-                {
-                    var object =  self.chatDataSource.chatTableView(self, dataForRow:i)
-                    bubbleSection.append(object)
-                }
-                bubbleSection.sort({ $0.date.timeIntervalSince1970 > $1.date.timeIntervalSince1970 })
-            }
-        }
+        bubbleSection.sort(sortDate)
         super.reloadData()
-        println("reloadData")
+        
+        // Scroll to Bottom
+        var index = NSIndexPath(forRow: self.numberOfRowsInSection(0)-1, inSection: 0)
+        self.scrollToRowAtIndexPath(index, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -190,28 +175,15 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        
-        if (indexPath.row == 0){
-            return 30.0
-        }
-        
-        var data =  self.bubbleSection[indexPath.row - 1]
-        
+        var data =  self.bubbleSection[indexPath.row]
         return max(data.insets.top + data.view.frame.size.height + data.insets.bottom + 5, 50+5)
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
         var cellId = "MsgCell"
-        if(indexPath.row > 0) {
-            var data =  self.bubbleSection[indexPath.row-1]
-            
-            var cell =  TableViewCell(data:data, reuseIdentifier:cellId)
-            
-            return cell
-        } else {
-            return UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: cellId)
-        }
+        var data =  self.bubbleSection[indexPath.row]
+        return TableViewCell(data:data, reuseIdentifier:cellId)
     }
 }
 
@@ -226,8 +198,6 @@ class TableViewCell:UITableViewCell {
         super.init(style:UITableViewCellStyle.Default, reuseIdentifier:cellId)
         
         render()
-        
-        println("init cell")
     }
 
     required init(coder aDecoder: NSCoder) {
@@ -244,11 +214,11 @@ class TableViewCell:UITableViewCell {
     }
     
     func addLogoImage(){
-        if(self.message.logo == "") {
+        if(self.message.user.avatar == "") {
             return
         }
         
-        self.logoImage = UIImageView(image: UIImage(named:(self.message.logo)))
+        self.logoImage = UIImageView(image: UIImage(named:(self.message.user.avatar)))
         self.logoImage.layer.cornerRadius = 9.0
         self.logoImage.layer.masksToBounds = true
         self.logoImage.layer.borderColor = UIColor(white: 0.0, alpha: 0.2).CGColor
@@ -310,24 +280,26 @@ class TableViewCell:UITableViewCell {
     }
 }
 
-protocol ChatDataSource
-{
-    /*返回对话记录中的全部行数*/
-    func rowsForChatTable( tableView:TableView) -> Int
-    
-    /*返回某一行的内容*/
-    func chatTableView(tableView:TableView, dataForRow:Int)-> Message
-    
-}
 
 enum ChatType {
     case Mine
     case Other
 }
 
+class User{
+    var username:String = ""
+    var avatar:String = ""
+    
+    init(name:String, logo:String)
+    {
+        self.username = name
+        self.avatar = logo
+    }
+}
+
 class Message {
     
-    var logo:String
+    var user:User
     var date:NSDate
     var mtype:ChatType
     var view:UIView
@@ -349,15 +321,15 @@ class Message {
         return UIEdgeInsets(top: 11, left: 13, bottom: 16, right: 22)
     }
     
-    init(logo:String, date:NSDate, mtype:ChatType, view:UIView, insets:UIEdgeInsets) {
+    init(user:User, date:NSDate, mtype:ChatType, view:UIView, insets:UIEdgeInsets) {
         self.view = view
-        self.logo = logo
+        self.user = user
         self.date = date
         self.mtype = mtype
         self.insets = insets
     }
     
-    convenience init(body:NSString, logo:String, date:NSDate, mtype:ChatType) {
+    convenience init(body:NSString, user:User, date:NSDate, mtype:ChatType) {
         var font = UIFont.boldSystemFontOfSize(12)
         var width = 225, height = 10000.0
         
@@ -375,10 +347,10 @@ class Message {
         
         var insets:UIEdgeInsets = (mtype == ChatType.Mine ? Message.getTextInsetsMine() : Message.getTextInsetOthers())
         
-        self.init(logo:logo, date:date, mtype:mtype, view:label, insets:insets)
+        self.init(user:user, date:date, mtype:mtype, view:label, insets:insets)
     }
     
-    convenience init(image:UIImage, logo:String, date:NSDate, mtype:ChatType) {
+    convenience init(image:UIImage, user:User, date:NSDate, mtype:ChatType) {
         var size = image.size
         
         if(size.width>220) {
@@ -393,7 +365,7 @@ class Message {
         
         var insets:UIEdgeInsets = (mtype == ChatType.Mine ? Message.getImageInsetMine() : Message.getImageInsetOthers())
         
-        self.init(logo:logo, date:date, mtype:mtype, view:imageView, insets:insets)
+        self.init(user:user, date:date, mtype:mtype, view:imageView, insets:insets)
     }
 }
 
