@@ -52,6 +52,7 @@ class DemoData {
         var fifth =  Message(body:"好的，一定！",user:you, date:NSDate(timeIntervalSinceNow:-10), mtype:ChatType.Other)
         
         data = [first,second, third, fouth, fifth]
+//        data = [first]
     }
     
     func getData() -> [Message] {
@@ -125,8 +126,10 @@ class SendView:UIView, UITextFieldDelegate {
 
 class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
     
-    var bubbleSection:Array<Message>!
-    let CELL_ID : String = "MsgCell"
+    var allMessages : Array<Message>!
+    var groupedMessages : NSMutableArray = NSMutableArray()
+    let MSG_CELL_ID : String = "MsgCell"
+    let HEADER_CELL_ID : String = "HeaderCell"
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -142,11 +145,11 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
         self.delegate = self
         self.dataSource = self
         
-        self.bubbleSection = DemoData().getData()
+        self.allMessages = DemoData().getData()
     }
     
     func addMessage(message:Message) {
-        bubbleSection.append(message)
+        allMessages.append(message)
         reloadData()
     }
     
@@ -161,27 +164,22 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
         self.showsHorizontalScrollIndicator = false
         
         // 排序并分组
-        bubbleSection.sort(sortDate)
-        var last =  ""
+        allMessages.sort(sortDate)
         
-        var currentSection = NSMutableArray()
-        // 创建一个日期格式器
         var dformatter = NSDateFormatter()
-        // 为日期格式器设置格式字符串
-        dformatter.dateFormat = "dd"
+        dformatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
         
-        
-        for (var i = 0; i < count; i++)
-        {
-            var data =  bubbleData[i] as! MessageItem
-            // 使用日期格式器格式化日期，日期不同，就新分组
-            var datestr = dformatter.stringFromDate(data.date)
-            if (datestr != last)
-            {
+        var last =  ""
+        var currentSection = NSMutableArray()
+        for (var i = 0; i < allMessages.count; i++) {
+            
+            var msg =  allMessages[i]
+            var datestr = dformatter.stringFromDate(msg.date)
+            if (datestr != last) {
                 currentSection = NSMutableArray()
-                self.bubbleSection.addObject(currentSection)
+                self.groupedMessages.addObject(currentSection)
             }
-            self.bubbleSection[self.bubbleSection.count-1].addObject(data)
+            currentSection.addObject(msg)
             
             last = datestr
         }
@@ -189,29 +187,62 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
         super.reloadData()
         
         // Scroll to Bottom
-        var index = NSIndexPath(forRow: self.numberOfRowsInSection(0)-1, inSection: 0)
+        var index = NSIndexPath(forRow: self.numberOfRowsInSection(0)-1, inSection: self.groupedMessages.count-1)
         self.scrollToRowAtIndexPath(index, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+        
+        var count = self.groupedMessages.count
+        
+        println("numberOfSectionsInTableView = \(count)")
+        
+        return count
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.bubbleSection.count
+        
+        var count = self.groupedMessages[section].count
+        
+        println("numberOfRowsInSection = \(count), section = \(section)")
+        
+        return count
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        var data =  self.bubbleSection[indexPath.row]
+        
+        println("indexPath.section = \(indexPath.section), indexPath.row = \(indexPath.row)")
+        
+//        if (indexPath.row == 0)
+//        {
+//            return TableViewHeaderCell.getHeight()
+//        }
+        
+        var section : AnyObject  =  self.groupedMessages[indexPath.section]
+        var data = section[indexPath.row] as! Message
         return max(data.insets.top + data.view.frame.size.height + data.insets.bottom + 5, 50+5)
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var data =  self.bubbleSection[indexPath.row]
-        var cell = TableViewCell(reuseIdentifier:CELL_ID)
-        cell.message = data
-        cell.render()
-        return cell
+        
+        println("indexPath.section = \(indexPath.section), indexPath.row = \(indexPath.row)")
+        
+        // Header Cell
+//        if (indexPath.row == 0) {
+//            var hcell =  TableViewHeaderCell(reuseIdentifier:HEADER_CELL_ID)
+//            var section : AnyObject  =  self.groupedMessages[indexPath.section]
+//            var data = section[indexPath.row] as! Message
+//            
+//            hcell.setDate(data.date)
+//            return hcell
+//        } else {
+            var section : AnyObject  =  self.groupedMessages[indexPath.section]
+            var data = section[indexPath.row] as! Message
+            var cell = TableViewCell(reuseIdentifier:MSG_CELL_ID)
+            cell.message = data
+            cell.render()
+            return cell
+//        }
     }
 }
 
@@ -260,7 +291,7 @@ class TableViewHeaderCell : UITableViewCell {
         
         let views = ["label":self.label]
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[label]-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[label(==30)]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[label(==30)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
     }
 }
 
