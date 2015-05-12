@@ -126,6 +126,7 @@ class SendView:UIView, UITextFieldDelegate {
 class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
     
     var bubbleSection:Array<Message>!
+    let CELL_ID : String = "MsgCell"
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -137,10 +138,11 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
         
         self.backgroundColor = UIColor.clearColor()
         self.separatorStyle = UITableViewCellSeparatorStyle.None
-        self.bubbleSection = DemoData().getData()
         
         self.delegate = self
         self.dataSource = self
+        
+        self.bubbleSection = DemoData().getData()
     }
     
     func addMessage(message:Message) {
@@ -158,7 +160,32 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
         self.showsVerticalScrollIndicator = false
         self.showsHorizontalScrollIndicator = false
         
+        // 排序并分组
         bubbleSection.sort(sortDate)
+        var last =  ""
+        
+        var currentSection = NSMutableArray()
+        // 创建一个日期格式器
+        var dformatter = NSDateFormatter()
+        // 为日期格式器设置格式字符串
+        dformatter.dateFormat = "dd"
+        
+        
+        for (var i = 0; i < count; i++)
+        {
+            var data =  bubbleData[i] as! MessageItem
+            // 使用日期格式器格式化日期，日期不同，就新分组
+            var datestr = dformatter.stringFromDate(data.date)
+            if (datestr != last)
+            {
+                currentSection = NSMutableArray()
+                self.bubbleSection.addObject(currentSection)
+            }
+            self.bubbleSection[self.bubbleSection.count-1].addObject(data)
+            
+            last = datestr
+        }
+        
         super.reloadData()
         
         // Scroll to Bottom
@@ -179,11 +206,61 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
         return max(data.insets.top + data.view.frame.size.height + data.insets.bottom + 5, 50+5)
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
-    {
-        var cellId = "MsgCell"
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var data =  self.bubbleSection[indexPath.row]
-        return TableViewCell(data:data, reuseIdentifier:cellId)
+        var cell = TableViewCell(reuseIdentifier:CELL_ID)
+        cell.message = data
+        cell.render()
+        return cell
+    }
+}
+
+class TableViewHeaderCell : UITableViewCell {
+    var height:CGFloat = 30.0
+    var label:UILabel!
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    init(reuseIdentifier cellId:String)
+    {
+        super.init(style: UITableViewCellStyle.Default, reuseIdentifier:cellId)
+    }
+    
+    class func getHeight() -> CGFloat
+    {
+        return 30.0
+    }
+    
+    func setDate(value:NSDate)
+    {
+        self.height  = 30.0
+        var dateFormatter =  NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy年MM月dd日"
+        var text =  dateFormatter.stringFromDate(value)
+        
+        if (self.label != nil)
+        {
+            self.label.text = text
+            return
+        }
+        
+        self.selectionStyle = UITableViewCellSelectionStyle.None
+        self.label = UILabel()
+        self.label.text = text
+        self.label.font = UIFont.boldSystemFontOfSize(12)
+        self.label.textAlignment = NSTextAlignment.Center
+        self.label.shadowOffset = CGSizeMake(0, 1)
+        self.label.shadowColor = UIColor.whiteColor()
+        self.label.textColor = UIColor.darkGrayColor()
+        self.label.backgroundColor = UIColor.clearColor()
+        self.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.addSubview(self.label)
+        
+        let views = ["label":self.label]
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[label]-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[label(==30)]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
     }
 }
 
@@ -193,11 +270,9 @@ class TableViewCell:UITableViewCell {
     var logoImage:UIImageView!
     var message:Message!
     
-    init(data:Message, reuseIdentifier cellId:String) {
-        self.message = data
-        super.init(style:UITableViewCellStyle.Default, reuseIdentifier:cellId)
-        
-        render()
+    init(reuseIdentifier cellId:String)
+    {
+        super.init(style: UITableViewCellStyle.Default, reuseIdentifier:cellId)
     }
 
     required init(coder aDecoder: NSCoder) {
@@ -277,6 +352,10 @@ class TableViewCell:UITableViewCell {
         
         constraint = "V:|-customViewTopOffset-[customView]"
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat(constraint, options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
+    }
+    
+    func getHeight() ->CGFloat {
+        return max(self.message.insets.top + self.message.view.frame.size.height + self.message.insets.bottom + 5, 50+5)
     }
 }
 
