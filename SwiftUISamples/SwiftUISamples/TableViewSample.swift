@@ -45,14 +45,14 @@ class DemoData {
         var me = User(name:"me",logo:"xiaoming.png")
         var you = User(name:"you",logo:"xiaohua.png")
         
-        var first =  Message(body:"嘿，这张照片咋样，我在泸沽湖拍的呢！", user:me,  date:NSDate(timeIntervalSinceNow:-6000), mtype:ChatType.Mine)
-        var second =  Message(image:UIImage(named:"luguhu.jpeg")!,user:me, date:NSDate(timeIntervalSinceNow:-2900), mtype:ChatType.Mine)
-        var third =  Message(body:"太赞了，我也想去那看看呢！",user:you, date:NSDate(timeIntervalSinceNow:-1000), mtype:ChatType.Other)
-        var fouth =  Message(body:"嗯，下次我们一起去吧！",user:me, date:NSDate(timeIntervalSinceNow:-200), mtype:ChatType.Mine)
-        var fifth =  Message(body:"好的，一定！",user:you, date:NSDate(timeIntervalSinceNow:-10), mtype:ChatType.Other)
+        var first =  Message(body:"嘿，这张照片咋样，我在泸沽湖拍的呢！", user:me,  date:NSDate(timeIntervalSinceNow:-3600*24), mtype:ChatType.Mine)
+        var second =  Message(image:UIImage(named:"luguhu.jpeg")!,user:me, date:NSDate(timeIntervalSinceNow:-3000*24), mtype:ChatType.Mine)
+        var third =  Message(body:"太赞了，我也想去那看看呢！",user:you, date:NSDate(timeIntervalSinceNow:-2900*24), mtype:ChatType.Other)
+        var fouth =  Message(body:"嗯，下次我们一起去吧！",user:me, date:NSDate(timeIntervalSinceNow:-2800*24), mtype:ChatType.Mine)
+        var fifth =  Message(body:"好的，一定！",user:you, date:NSDate(timeIntervalSinceNow:-2700*24), mtype:ChatType.Other)
         
-        data = [first,second, third, fouth, fifth]
-//        data = [first]
+//        data = [first,second, third, fouth, fifth]
+        data = [first]
     }
     
     func getData() -> [Message] {
@@ -127,7 +127,7 @@ class SendView:UIView, UITextFieldDelegate {
 class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
     
     var allMessages : Array<Message>!
-    var groupedMessages : NSMutableArray = NSMutableArray()
+    var groupedMessages : NSMutableArray!
     let MSG_CELL_ID : String = "MsgCell"
     let HEADER_CELL_ID : String = "HeaderCell"
     
@@ -164,10 +164,12 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
         self.showsHorizontalScrollIndicator = false
         
         // 排序并分组
-        allMessages.sort(sortDate)
+        self.groupedMessages = NSMutableArray()
+        self.allMessages.sort(sortDate)
         
         var dformatter = NSDateFormatter()
-        dformatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+//        dformatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+        dformatter.dateFormat = "yyyy年MM月dd日"
         
         var last =  ""
         var currentSection = NSMutableArray()
@@ -184,10 +186,17 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
             last = datestr
         }
         
+        println("allMessage.count = \(allMessages.count)")
+        
         super.reloadData()
         
         // Scroll to Bottom
-        var index = NSIndexPath(forRow: self.numberOfRowsInSection(0)-1, inSection: self.groupedMessages.count-1)
+        var section = self.groupedMessages.count - 1
+        var rowIndex = self.numberOfRowsInSection(section) - 1
+        
+//        println("section = \(section) and rowIndex = \(rowIndex)")
+        
+        var index = NSIndexPath(forRow: rowIndex, inSection: section)
         self.scrollToRowAtIndexPath(index, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
     }
     
@@ -195,7 +204,7 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
         
         var count = self.groupedMessages.count
         
-        println("numberOfSectionsInTableView = \(count)")
+//        println("numberOfSectionsInTableView = \(count)")
         
         return count
     }
@@ -204,14 +213,14 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
         
         var count = self.groupedMessages[section].count
         
-        println("numberOfRowsInSection = \(count), section = \(section)")
+//        println("numberOfRowsInSection = \(count), section = \(section)")
         
         return count
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         
-        println("indexPath.section = \(indexPath.section), indexPath.row = \(indexPath.row)")
+//        println("indexPath.section = \(indexPath.section), indexPath.row = \(indexPath.row)")
         
 //        if (indexPath.row == 0)
 //        {
@@ -225,7 +234,7 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        println("indexPath.section = \(indexPath.section), indexPath.row = \(indexPath.row)")
+//        println("indexPath.section = \(indexPath.section), indexPath.row = \(indexPath.row)")
         
         // Header Cell
 //        if (indexPath.row == 0) {
@@ -243,6 +252,53 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
             cell.render()
             return cell
 //        }
+    }
+    
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        var section : AnyObject  =  self.groupedMessages[section]
+        var data = section[0] as! Message
+        
+        var dateFormatter =  NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy年MM月dd日"
+//        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+        return dateFormatter.stringFromDate(data.date)
+    }
+    
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        var section : AnyObject  =  self.groupedMessages[section]
+        var data = section[0] as! Message
+        var dateFormatter =  NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy年MM月dd日"
+        
+//        var uiView = UIView(frame: CGRectMake(0, 0, 300, 30))
+        var uiView = UIView()
+        uiView.backgroundColor = UIColor.clearColor()
+        uiView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        
+        var label = UILabel()
+        label.text = dateFormatter.stringFromDate(data.date)
+        label.font = UIFont.boldSystemFontOfSize(12)
+        label.textAlignment = NSTextAlignment.Center
+        label.textColor = UIColor.whiteColor()
+        label.backgroundColor = UIColor.grayColor()
+        label.layer.cornerRadius = 5
+        label.layer.masksToBounds = true
+        label.sizeToFit()
+        label.center.x = uiView.center.x
+        label.setTranslatesAutoresizingMaskIntoConstraints(false)
+        uiView.addSubview(label)
+
+//        let views = ["label":label, "view":uiView]
+//        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[label]-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+//        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[label]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+//        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[view]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        
+        return uiView
+    }
+    
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 30.0
     }
 }
 
@@ -285,7 +341,7 @@ class TableViewHeaderCell : UITableViewCell {
         self.label.shadowOffset = CGSizeMake(0, 1)
         self.label.shadowColor = UIColor.whiteColor()
         self.label.textColor = UIColor.darkGrayColor()
-        self.label.backgroundColor = UIColor.clearColor()
+        self.label.backgroundColor = UIColor.grayColor()
         self.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.addSubview(self.label)
         
