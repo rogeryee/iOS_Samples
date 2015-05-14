@@ -18,6 +18,7 @@ class ProgressSample: SampleView {
         progressView.setProgress(0.8,animated:true)
         progressView.progressTintColor=UIColor.greenColor()
         progressView.trackTintColor=UIColor.blueColor()
+        progressView.progressViewStyle = UIProgressViewStyle.Bar
         progressView.setTranslatesAutoresizingMaskIntoConstraints(false)
         
         self.addSubview(progressView);
