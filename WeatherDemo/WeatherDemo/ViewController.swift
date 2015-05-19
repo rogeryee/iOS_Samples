@@ -14,9 +14,16 @@ struct Weather {
     var temp:String?
 }
 
-struct City {
+class City : NSObject {
     var cityId:String?
     var cityName:String?
+    var cityNo:String?
+    
+    init(id:String, name:String, no:String) {
+        self.cityNo = no
+        self.cityId = id
+        self.cityName = name
+    }
 }
 
 class CityLabel : UILabel {
@@ -33,6 +40,7 @@ class ViewController: UIViewController {
     var labelWeather: UILabel!
     var labelTemp: UILabel!
     var loadIndicator : UIActivityIndicatorView!
+    var mask : UIView!
     var citySelectionViewController : CitySelectionViewController!
     
     var weatherData:Weather?{
@@ -89,7 +97,6 @@ class ViewController: UIViewController {
             return
         }
         
-        // http://api.k780.com:88/?app=weather.today&&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json&weaid=1
         var urlStr = "http://api.k780.com:88/?app=weather.today&&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json&weaid=" + city!.cityId!
         
         var url:NSURL = NSURL(string: urlStr)!
@@ -116,12 +123,24 @@ class ViewController: UIViewController {
                     
                     self.weatherData = weather
                     self.loadIndicator.stopAnimating()
+                    self.enableView()
                 }
             }
         })
         
         task.resume()
+        self.disableView()
         self.loadIndicator.startAnimating()
+    }
+    
+    func disableView() {
+        self.mask.alpha = 0.3
+        self.labelCity.userInteractionEnabled = false
+    }
+    
+    func enableView() {
+        self.mask.alpha = 0.0
+        self.labelCity.userInteractionEnabled = true
     }
     
     override func viewDidLoad() {
@@ -165,13 +184,22 @@ class ViewController: UIViewController {
         self.loadIndicator.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.view.addSubview(self.loadIndicator)
         
-        let views = ["labelCity":self.labelCity, "labelWeather":self.labelWeather, "labelTemp":self.labelTemp]
+        self.mask = UIView()
+        self.mask.backgroundColor = UIColor.blackColor()
+        self.mask.alpha = 0
+        self.mask.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.view.addSubview(self.mask)
+        
+        let views = ["labelCity":self.labelCity, "labelWeather":self.labelWeather, "labelTemp":self.labelTemp, "mask":self.mask]
         
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[labelCity]-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[labelWeather]-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[labelTemp]-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
         
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-50-[labelCity(==50)]-50-[labelWeather(==70)]-50-[labelTemp(==50)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[mask]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[mask]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
         
         self.view.addConstraints([NSLayoutConstraint(item: self.labelCity, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0)])
         self.view.addConstraints([NSLayoutConstraint(item: self.labelWeather, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0)])
@@ -187,12 +215,17 @@ class ViewController: UIViewController {
     }
 }
 
-class CitySelectionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class CitySelectionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
     var parent:ViewController!
     var tableView : UITableView!
     var loadIndicator : UIActivityIndicatorView!
-    var cityList:Array<City> = Array()
+    var searchBar : UISearchBar!
+    var isSearching : Bool = false
+    var mask : UIView! // 用于遮罩table，当用户开始输入搜索关键字时
+    
+    var cityList:NSMutableArray = NSMutableArray()
+    var filteredCityList:NSMutableArray = NSMutableArray()
     var selectedCity:City!
     
     init(parent:ViewController) {
@@ -207,12 +240,11 @@ class CitySelectionViewController: UIViewController, UITableViewDelegate, UITabl
     }
     
     override func viewDidLoad() {
-//        var button = UIButton(frame:CGRectMake(0, 20, 100, 20))
-//        button.setTitle("按钮", forState:UIControlState.Normal)
-//        button.setTitleColor(UIColor.blackColor(),forState: .Normal)
-//        button.backgroundColor=UIColor.whiteColor()
-//        button.addTarget(self,action:Selector("tapped:"),forControlEvents:UIControlEvents.TouchUpInside)
-//        self.view.addSubview(button)
+        self.searchBar = UISearchBar()
+        self.searchBar.placeholder = "搜索城市"
+        self.searchBar.delegate = self
+        self.searchBar.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.view.addSubview(self.searchBar)
         
         self.tableView = UITableView()
         self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "SampleCell")
@@ -227,9 +259,19 @@ class CitySelectionViewController: UIViewController, UITableViewDelegate, UITabl
         self.loadIndicator.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.view.addSubview(self.loadIndicator)
         
-        var views = ["tableView": self.tableView]
+        self.mask = UIView()
+        self.mask.backgroundColor = UIColor.blackColor()
+        self.mask.alpha = 0
+        self.mask.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.view.addSubview(self.mask)
+        
+        var views = ["tableView": self.tableView, "searchBar":self.searchBar, "mask":self.mask]
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[searchBar]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[tableView]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-21-[tableView]-5-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-21-[searchBar(==40)][tableView]-5-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
+        
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[mask]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-61-[mask]-5-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
         
         self.view.addConstraints([NSLayoutConstraint(item: self.loadIndicator, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0)])
         self.view.addConstraints([NSLayoutConstraint(item: self.loadIndicator, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: -20.0)])
@@ -238,18 +280,32 @@ class CitySelectionViewController: UIViewController, UITableViewDelegate, UITabl
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if self.isSearching {
+            return self.filteredCityList.count
+        }
         return self.cityList.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCellWithIdentifier("SampleCell", forIndexPath: indexPath) as! UITableViewCell
         cell.accessoryType = UITableViewCellAccessoryType.None
-        cell.textLabel!.text = self.cityList[indexPath.row].cityName
+        
+        if self.isSearching {
+            cell.textLabel!.text = (self.filteredCityList[indexPath.row] as! City).cityName
+        } else {
+            cell.textLabel!.text = (self.cityList[indexPath.row] as! City).cityName
+        }
         return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        self.selectedCity = self.cityList[indexPath.row]
+        
+        if self.isSearching {
+            self.selectedCity = (self.filteredCityList[indexPath.row] as! City)
+        } else {
+            self.selectedCity = (self.cityList[indexPath.row] as! City)
+        }
+        
         var cell = tableView.cellForRowAtIndexPath(indexPath)
         cell?.accessoryType = UITableViewCellAccessoryType.Checkmark
         parent.backToViewController(self.selectedCity)
@@ -258,6 +314,62 @@ class CitySelectionViewController: UIViewController, UITableViewDelegate, UITabl
     func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
         var cell = tableView.cellForRowAtIndexPath(indexPath)
         cell?.accessoryType = UITableViewCellAccessoryType.None
+    }
+    
+    func searchBarTextDidEndEditing(searchBar: UISearchBar) {
+        println("searchBarTextDidEndEditing")
+    }
+    
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        println("searchBarSearchButtonClicked")
+        searchBar.resignFirstResponder()
+        self.isSearching = true
+        self.searchBar.showsCancelButton = true
+        enableTableView()
+    }
+    
+    func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
+        self.isSearching = true
+        self.searchBar.showsCancelButton = true
+        disableTableView()
+    }
+    
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText == "" {
+            self.isSearching = false
+            enableTableView()
+            self.tableView.reloadData()
+            return
+        }
+        
+        self.isSearching = true
+        disableTableView()
+        
+        var predicate:NSPredicate = NSPredicate(format: "cityNo CONTAINS[c] %@ || cityName CONTAINS[c] %@", searchText, searchText)
+        self.filteredCityList = NSMutableArray(array: cityList.filteredArrayUsingPredicate(predicate))
+        
+        self.tableView.reloadData()
+    }
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        self.searchBar.text = ""
+        self.searchBar.showsCancelButton = false
+        self.searchBar.resignFirstResponder()
+        self.isSearching = false
+        enableTableView()
+        self.tableView.reloadData()
+    }
+    
+    func disableTableView() {
+        self.mask.alpha = 0.3
+        self.tableView.allowsSelection = false
+        self.tableView.scrollEnabled = false
+    }
+    
+    func enableTableView() {
+        self.mask.alpha = 0.0
+        self.tableView.allowsSelection = true
+        self.tableView.scrollEnabled = true
     }
     
     func loadCities() {
@@ -273,13 +385,14 @@ class CitySelectionViewController: UIViewController, UITableViewDelegate, UITabl
                 if success == "1" {
                     var cities:NSDictionary = (jsonData!.objectForKey("result") as? NSDictionary)!
                     
-                    var cityName:String, cityId:String, city:City
+                    var cityName:String, cityId:String, cityNo:String, city:City
                     for temp in cities.allValues {
                         var tempDic = temp as! NSDictionary
                         cityName = tempDic["citynm"] as! String
                         cityId = tempDic["cityid"] as! String
-                        city = City(cityId: cityId, cityName: cityName)
-                        self.cityList.append(city)
+                        cityNo = (tempDic["cityno"] as! String)
+                        city = City(id: cityId, name: cityName, no:cityNo)
+                        self.cityList.addObject(city)
                     }
                     
                     println("cities.count = \(cities.count)")
