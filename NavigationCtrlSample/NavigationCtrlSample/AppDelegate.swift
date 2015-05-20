@@ -19,6 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         var rootViewController = RootViewController()
         var navigation = UINavigationController(rootViewController: rootViewController)
+        navigation.navigationBar.setBackgroundImage(UIImage(named: "toolbar"), forBarMetrics: UIBarMetrics.Default)
+        
         self.window?.rootViewController = navigation
         
         return true
