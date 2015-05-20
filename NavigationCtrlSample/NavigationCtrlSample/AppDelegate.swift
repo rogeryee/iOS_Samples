@@ -1,9 +1,9 @@
 //
 //  AppDelegate.swift
-//  SwiftUISamples
+//  NavigationCtrlSample
 //
-//  Created by Roger Yee on 12/5/14.
-//  Copyright (c) 2014 Roger Yee. All rights reserved.
+//  Created by Roger Yee on 5/19/15.
+//  Copyright (c) 2015 Roger Yee. All rights reserved.
 //
 
 import UIKit
@@ -15,7 +15,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.        
+        // Override point for customization after application launch.
+        
+        var rootViewController = RootViewController()
+        var navigation = UINavigationController(rootViewController: rootViewController)
+        self.window?.rootViewController = navigation
+        
         return true
     }
 
@@ -40,5 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
+
+
 }
 
