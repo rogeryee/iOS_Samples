@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  TabBarSample
+//  TabBar_NavigationSample
 //
 //  Created by Roger Yee on 5/21/15.
 //  Copyright (c) 2015 Roger Yee. All rights reserved.
@@ -17,32 +17,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
-        /*
-         * 1. 创建若干子视图控制器
-         * 2. 将创建的子视图控制器添加到数组中
-         * 3. 穿件UITabBarController实例
-         */
+        // 1. 以TabBarController为主体，
+        // 2. 可以为每个子的VC添加UINavigationController
         var firstVC = FirstViewController()
-        var firstItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.Favorites, tag: 1)
-        firstVC.tabBarItem = firstItem
-        firstVC.tabBarItem.badgeValue = "New"
+        var firstNavigationVC = UINavigationController(rootViewController: firstVC)
         
         var secondVC = SecondViewController()
-        var secondItem = UITabBarItem(title: "STAR", image: UIImage(named: "star"), tag: 2)
-        secondVC.tabBarItem = secondItem
-        secondVC.tabBarItem.badgeValue = "2"
+        var views = [firstNavigationVC, secondVC]
         
-        var thirdVC = ThirdViewController()
-        var thirdItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.History, tag: 1)
-        thirdVC.tabBarItem = thirdItem
-        
-        var forthVC = ForthViewController()
-        var forthItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.Search, tag: 1)
-        forthVC.tabBarItem = forthItem
-        
-        var views = [firstVC, secondVC, thirdVC, forthVC]
-        
-        var tabBarController = TabBarViewController()
+        var tabBarController = UITabBarController()
         tabBarController.setViewControllers(views, animated: true)
         
         self.window?.rootViewController = tabBarController

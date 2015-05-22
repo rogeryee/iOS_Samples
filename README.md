@@ -9,3 +9,9 @@ SwiftUISample : 展示了用swift编写iOS UI组件的例子
 ConstraintsSample : 展示了如何使用Auto Layout来进行组件布局
 
 WeatherDemo : 展示了如何使用NSURLSession来获取JSON格式的天气数据
+
+NavigationCtrlSample ： 展示了如何使用NavigationController来完成页面之间的切换
+
+TabBarSample ： 展示了如何使用TabBar来切换界面
+
+TabBar_NavigationSample ： 展示了如何综合使用TabBar和NavigationController的例子

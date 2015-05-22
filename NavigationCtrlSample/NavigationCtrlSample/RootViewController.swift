@@ -33,7 +33,6 @@ class RootViewController: UIViewController, UINavigationControllerDelegate {
         titleView.backgroundColor = UIColor.blueColor()
         self.navigationItem.titleView = titleView
         
-        
         var button = UIButton()
         button.setTitle("Push", forState: UIControlState.Normal)
         button.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
