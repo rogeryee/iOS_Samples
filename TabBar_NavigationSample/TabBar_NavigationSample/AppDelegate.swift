@@ -20,9 +20,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // 1. 以TabBarController为主体，
         // 2. 可以为每个子的VC添加UINavigationController
         var firstVC = FirstViewController()
+        var firstItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.Favorites, tag: 1)
+        firstVC.tabBarItem = firstItem
+        
         var firstNavigationVC = UINavigationController(rootViewController: firstVC)
         
         var secondVC = SecondViewController()
+        var secondItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.Contacts, tag: 2)
+        secondVC.tabBarItem = secondItem
+        
+        // Add to Array
         var views = [firstNavigationVC, secondVC]
         
         var tabBarController = UITabBarController()

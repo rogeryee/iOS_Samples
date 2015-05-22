@@ -12,7 +12,6 @@ class SecondViewController: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        self.title = "设置"
     }
     
     required init(coder aDecoder: NSCoder) {

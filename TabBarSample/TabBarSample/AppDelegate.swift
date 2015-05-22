@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         firstVC.tabBarItem.badgeValue = "New"
         
         var secondVC = SecondViewController()
-        var secondItem = UITabBarItem(title: "STAR", image: UIImage(named: "star"), tag: 2)
+        var secondItem = UITabBarItem(title: "消息", image: UIImage(named: "bubble"), tag: 2)
         secondVC.tabBarItem = secondItem
         secondVC.tabBarItem.badgeValue = "2"
         
