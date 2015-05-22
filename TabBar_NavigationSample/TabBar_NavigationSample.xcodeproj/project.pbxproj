@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		CA74C4AE1B0F0210003EDAE4 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA74C4AD1B0F0210003EDAE4 /* SecondViewController.swift */; };
+		CA74C4B01B0F2F5B003EDAE4 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA74C4AF1B0F2F5B003EDAE4 /* TabBarViewController.swift */; };
+		CA74C4B41B0F306E003EDAE4 /* bubble.png in Resources */ = {isa = PBXBuildFile; fileRef = CA74C4B21B0F306E003EDAE4 /* bubble.png */; };
+		CA74C4B51B0F306E003EDAE4 /* cloud-download.png in Resources */ = {isa = PBXBuildFile; fileRef = CA74C4B31B0F306E003EDAE4 /* cloud-download.png */; };
+		CA74C4B71B0F30F7003EDAE4 /* tabBar.png in Resources */ = {isa = PBXBuildFile; fileRef = CA74C4B61B0F30F7003EDAE4 /* tabBar.png */; };
 		CA9BEDCA1B0DCB7800146376 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9BEDC91B0DCB7800146376 /* AppDelegate.swift */; };
 		CA9BEDCC1B0DCB7800146376 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9BEDCB1B0DCB7800146376 /* FirstViewController.swift */; };
 		CA9BEDCF1B0DCB7800146376 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CA9BEDCD1B0DCB7800146376 /* Main.storyboard */; };
@@ -28,6 +32,10 @@
 
 /* Begin PBXFileReference section */
 		CA74C4AD1B0F0210003EDAE4 /* SecondViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
+		CA74C4AF1B0F2F5B003EDAE4 /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		CA74C4B21B0F306E003EDAE4 /* bubble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bubble.png; sourceTree = "<group>"; };
+		CA74C4B31B0F306E003EDAE4 /* cloud-download.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cloud-download.png"; sourceTree = "<group>"; };
+		CA74C4B61B0F30F7003EDAE4 /* tabBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tabBar.png; sourceTree = "<group>"; };
 		CA9BEDC41B0DCB7800146376 /* TabBar_NavigationSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TabBar_NavigationSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA9BEDC81B0DCB7800146376 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CA9BEDC91B0DCB7800146376 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -58,6 +66,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CA74C4B11B0F3037003EDAE4 /* images */ = {
+			isa = PBXGroup;
+			children = (
+				CA74C4B61B0F30F7003EDAE4 /* tabBar.png */,
+				CA74C4B21B0F306E003EDAE4 /* bubble.png */,
+				CA74C4B31B0F306E003EDAE4 /* cloud-download.png */,
+			);
+			name = images;
+			sourceTree = "<group>";
+		};
 		CA9BEDBB1B0DCB7800146376 = {
 			isa = PBXGroup;
 			children = (
@@ -79,6 +97,7 @@
 		CA9BEDC61B0DCB7800146376 /* TabBar_NavigationSample */ = {
 			isa = PBXGroup;
 			children = (
+				CA74C4B11B0F3037003EDAE4 /* images */,
 				CA9BEDC91B0DCB7800146376 /* AppDelegate.swift */,
 				CA9BEDCB1B0DCB7800146376 /* FirstViewController.swift */,
 				CA74C4AD1B0F0210003EDAE4 /* SecondViewController.swift */,
@@ -86,6 +105,7 @@
 				CA9BEDD21B0DCB7800146376 /* LaunchScreen.xib */,
 				CA9BEDCD1B0DCB7800146376 /* Main.storyboard */,
 				CA9BEDC71B0DCB7800146376 /* Supporting Files */,
+				CA74C4AF1B0F2F5B003EDAE4 /* TabBarViewController.swift */,
 			);
 			path = TabBar_NavigationSample;
 			sourceTree = "<group>";
@@ -196,7 +216,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				CA9BEDCF1B0DCB7800146376 /* Main.storyboard in Resources */,
+				CA74C4B71B0F30F7003EDAE4 /* tabBar.png in Resources */,
+				CA74C4B41B0F306E003EDAE4 /* bubble.png in Resources */,
 				CA9BEDD41B0DCB7800146376 /* LaunchScreen.xib in Resources */,
+				CA74C4B51B0F306E003EDAE4 /* cloud-download.png in Resources */,
 				CA9BEDD11B0DCB7800146376 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -215,6 +238,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CA74C4B01B0F2F5B003EDAE4 /* TabBarViewController.swift in Sources */,
 				CA74C4AE1B0F0210003EDAE4 /* SecondViewController.swift in Sources */,
 				CA9BEDCC1B0DCB7800146376 /* FirstViewController.swift in Sources */,
 				CA9BEDCA1B0DCB7800146376 /* AppDelegate.swift in Sources */,
