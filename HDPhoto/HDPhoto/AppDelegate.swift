@@ -25,23 +25,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func loadView() {
+        // First Tab
         var photoBrowserViewController = PhotoBrowserViewController()
-        var browserItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.Favorites, tag: 1)
+        var browserItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.Featured, tag: 1)
         photoBrowserViewController.tabBarItem = browserItem
         
         var firstNavigationVC = UINavigationController(rootViewController: photoBrowserViewController)
         
+        // Second Tab
         var downloadPhotoBrowserViewController = DownloadPhotoBrowserViewController()
         var downloadItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.Downloads, tag: 1)
         downloadPhotoBrowserViewController.tabBarItem = downloadItem
         
         var secondNavigationVC = UINavigationController(rootViewController: downloadPhotoBrowserViewController)
         
-        // Add to Array
-        var views = [firstNavigationVC, secondNavigationVC]
-        
+        // Add tabs to TabController
         var tabBarController = TabBarController()
-        tabBarController.setViewControllers(views, animated: true)
+        tabBarController.setViewControllers([firstNavigationVC, secondNavigationVC], animated: true)
         
         self.window?.rootViewController = tabBarController
     }

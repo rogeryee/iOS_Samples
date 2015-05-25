@@ -92,6 +92,8 @@
 		CA70A03B1B12E83B005A20F8 /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = "Alamofire-master/Alamofire.xcodeproj"; sourceTree = "<group>"; };
 		CA70A04F1B12EF90005A20F8 /* PhotoBrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoBrowserViewController.swift; sourceTree = "<group>"; };
 		CA70A0511B12F03A005A20F8 /* DownloadPhotoBrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadPhotoBrowserViewController.swift; sourceTree = "<group>"; };
+		CA70A0531B1312BF005A20F8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
+		CA70A0541B1312BF005A20F8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -357,6 +359,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				CA70A0201B12E7C7005A20F8 /* Base */,
+				CA70A0531B1312BF005A20F8 /* zh-Hans */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -365,6 +368,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				CA70A0251B12E7C7005A20F8 /* Base */,
+				CA70A0541B1312BF005A20F8 /* zh-Hans */,
 			);
 			name = LaunchScreen.xib;
 			sourceTree = "<group>";
