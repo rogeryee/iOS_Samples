@@ -17,6 +17,8 @@
 		CA70A04B1B12E87C005A20F8 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CA70A0431B12E83B005A20F8 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CA70A0501B12EF90005A20F8 /* PhotoBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA70A04F1B12EF90005A20F8 /* PhotoBrowserViewController.swift */; };
 		CA70A0521B12F03A005A20F8 /* DownloadPhotoBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA70A0511B12F03A005A20F8 /* DownloadPhotoBrowserViewController.swift */; };
+		CA70A0561B13254C005A20F8 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA70A0551B13254C005A20F8 /* Models.swift */; };
+		CA91D9991B1414AC00151D11 /* WebApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA91D9981B1414AC00151D11 /* WebApi.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +96,8 @@
 		CA70A0511B12F03A005A20F8 /* DownloadPhotoBrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadPhotoBrowserViewController.swift; sourceTree = "<group>"; };
 		CA70A0531B1312BF005A20F8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		CA70A0541B1312BF005A20F8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		CA70A0551B13254C005A20F8 /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		CA91D9981B1414AC00151D11 /* WebApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebApi.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,13 +142,15 @@
 			isa = PBXGroup;
 			children = (
 				CA70A01B1B12E7C7005A20F8 /* AppDelegate.swift */,
+				CA70A0511B12F03A005A20F8 /* DownloadPhotoBrowserViewController.swift */,
+				CA70A0551B13254C005A20F8 /* Models.swift */,
 				CA70A04F1B12EF90005A20F8 /* PhotoBrowserViewController.swift */,
 				CA70A01D1B12E7C7005A20F8 /* TabBarController.swift */,
-				CA70A01F1B12E7C7005A20F8 /* Main.storyboard */,
+				CA91D9981B1414AC00151D11 /* WebApi.swift */,
 				CA70A0221B12E7C7005A20F8 /* Images.xcassets */,
 				CA70A0241B12E7C7005A20F8 /* LaunchScreen.xib */,
+				CA70A01F1B12E7C7005A20F8 /* Main.storyboard */,
 				CA70A0191B12E7C7005A20F8 /* Supporting Files */,
-				CA70A0511B12F03A005A20F8 /* DownloadPhotoBrowserViewController.swift */,
 			);
 			path = HDPhoto;
 			sourceTree = "<group>";
@@ -324,10 +330,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CA70A0561B13254C005A20F8 /* Models.swift in Sources */,
 				CA70A0521B12F03A005A20F8 /* DownloadPhotoBrowserViewController.swift in Sources */,
 				CA70A0501B12EF90005A20F8 /* PhotoBrowserViewController.swift in Sources */,
 				CA70A01E1B12E7C7005A20F8 /* TabBarController.swift in Sources */,
 				CA70A01C1B12E7C7005A20F8 /* AppDelegate.swift in Sources */,
+				CA91D9991B1414AC00151D11 /* WebApi.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -530,6 +538,7 @@
 				CA70A0371B12E7C7005A20F8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		CA70A0381B12E7C7005A20F8 /* Build configuration list for PBXNativeTarget "HDPhotoTests" */ = {
 			isa = XCConfigurationList;
@@ -538,6 +547,7 @@
 				CA70A03A1B12E7C7005A20F8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
-        setGlobalStyles()
+        setGlobalStyles(application)
         
         loadView()
         
@@ -46,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.rootViewController = tabBarController
     }
     
-    func setGlobalStyles() {
+    func setGlobalStyles(application: UIApplication) {
         UINavigationBar.appearance().barStyle = .BlackTranslucent
         UINavigationBar.appearance().tintColor = UIColor.whiteColor()
         
