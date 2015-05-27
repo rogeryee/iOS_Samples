@@ -15,3 +15,7 @@ NavigationCtrlSample ： 展示了如何使用NavigationController来完成页�
 TabBarSample ： 展示了如何使用TabBar来切换界面
 
 TabBar_NavigationSample ： 展示了如何综合使用TabBar和NavigationController的例子
+
+HDPhoto ： 展示了如何使用Alamofire进行网络操作并使用CollectionView展现图片列表的例子
+
+CardScanner ：展示了使用CardIO组件扫描银行卡信息的展示
