@@ -8,7 +8,30 @@
 
 import Foundation
 
+//class User {
+//    var name : String!
+//    var logo : String!
+//    
+//    init(name:String, logo:String) {
+//        self.name = name
+//        self.logo = logo
+//    }
+//}
+
 // 与服务端通讯消息格式类
 class WXMessage {
+    var body = ""
+    var from = ""
+    var isComposing = false
+    var isDelay = false
+    var isFromMe = false
+}
 
+class Status {
+    var name : String = ""
+    var isOnline : Bool = false
+    
+    init(name:String) {
+        self.name = name
+    }
 }
