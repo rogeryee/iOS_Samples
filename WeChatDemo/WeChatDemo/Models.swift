@@ -8,7 +8,14 @@
 
 import Foundation
 
-//class User {
+class UserViewModel {
+    var name : String = ""
+    var isOnline : Bool = false
+    var unreadMessageNumber = 0
+    
+    init(name:String) {
+        self.name = name
+    }
 //    var name : String!
 //    var logo : String!
 //    
@@ -16,7 +23,7 @@ import Foundation
 //        self.name = name
 //        self.logo = logo
 //    }
-//}
+}
 
 // 与服务端通讯消息格式类
 class WXMessage {

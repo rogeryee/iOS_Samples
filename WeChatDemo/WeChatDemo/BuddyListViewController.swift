@@ -15,11 +15,8 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
     var tvBuddyList : UITableView!
     var btnLogin : UIBarButtonItem!
     var btnStatus : UIBarButtonItem!
-    
-    var buddyList = [WXMessage]()
-    var samples = [
-        "HelloWorld"
-    ]
+
+    var buddies = [UserViewModel]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,12 +63,19 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
         var defaults = NSUserDefaults.standardUserDefaults();
         var user = defaults.stringForKey(Constants.KEY_USER_ID)
         
-        println("user = \(user)")
-        
         if (user == nil) {
             navigateToLogin()
         }
         
+        // 如果当前登录用户未改变，则无需重复登录
+        var stream = self.appDelegate.xmppStream
+        if (stream != nil && stream?.isConnected() != nil) {
+            var loginUser = (stream?.myJID.user)! + "@" + (stream?.myJID.domain)!
+            if loginUser == user {
+                return
+            }
+        }
+
         self.appDelegate.connectToServer()
     }
     
@@ -82,10 +86,44 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
     
     func buddyOnline(presence: Presence) {
         println("buddyOnline \(presence.name)")
+        
+        var name = presence.name
+        var buddy : UserViewModel?
+        
+        for b in self.buddies {
+            if b.name == name {
+                buddy = b
+            }
+        }
+        
+        if buddy == nil {
+            buddy = UserViewModel(name:name)
+            buddies.append(buddy!)
+        }
+        buddy?.isOnline = true
+        
+        self.tvBuddyList.reloadData()
     }
     
     func buddyOffline(presence: Presence) {
         println("buddyOffine")
+        
+        var name = presence.name
+        var buddy : UserViewModel?
+        
+        for b in self.buddies {
+            if b.name == name {
+                buddy = b
+            }
+        }
+        
+        if buddy == nil {
+            buddy = UserViewModel(name:name)
+            buddies.append(buddy!)
+        }
+        buddy?.isOnline = false
+        
+        self.tvBuddyList.reloadData()
     }
     
     func selfOnline(presence: Presence) {
@@ -103,20 +141,22 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
     func changeStatusButton(presence: Presence) {
         self.btnStatus.title = presence.isOnline ? "在线" : "离线"
         self.btnStatus.tintColor = presence.isOnline ? UIColor.greenColor() : UIColor.grayColor()
+        
+        self.btnLogin.title = presence.isOnline ? "切换用户" : "登录"
     }
     
     func changeNavigationTitle(presence: Presence) {
-        self.navigationItem.title = presence.isOnline ? presence.name + "的好友列表" : "请登录..."
+        self.navigationItem.title = presence.isOnline ? presence.name + "好友列表" : "请登录..."
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.samples.count
+        return self.buddies.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("SampleCell", forIndexPath: indexPath) as! UITableViewCell
         cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-        cell.textLabel!.text = self.samples[indexPath.row]
+        cell.textLabel!.text = self.buddies[indexPath.row].name + " \(self.buddies[indexPath.row].isOnline)"
         return cell
     }
     

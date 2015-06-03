@@ -34,6 +34,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, XMPPStreamDelegate {
         }
     }
     
+    func xmppStream(sender: XMPPStream!, didReceiveError error: DDXMLElement!) {
+        println("didReceiveError \(error)")
+    }
+    
     func xmppStreamDidAuthenticate(sender: XMPPStream!) {
         println("xmppStreamDidAuthenticate")
         goOnline()
@@ -46,7 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, XMPPStreamDelegate {
     // 收到聊天消息
     func xmppStream(sender: XMPPStream!, didReceiveMessage message: XMPPMessage!) {
         
-        println("didReceiveMessage")
+        println("didReceiveMessage \(message)")
         
         if message.isChatMessage() {
             var msg = WXMessage()
@@ -126,9 +130,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, XMPPStreamDelegate {
         var defaults = NSUserDefaults.standardUserDefaults();
         var user = defaults.stringForKey(Constants.KEY_USER_ID)
         var server = defaults.stringForKey(Constants.KEY_SERVER)
-        
-//        user = "roger@rogeryee.com"
-//        server = "localhost"
         
         if ((user == nil || user == "") && (server == nil || server == "")) {
             return false

@@ -81,6 +81,8 @@
 		CA6704D41B171E1A0033CB62 /* youtyping.png in Resources */ = {isa = PBXBuildFile; fileRef = CA6704CC1B171E1A0033CB62 /* youtyping.png */; };
 		CA6704D51B171E1A0033CB62 /* youtyping@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CA6704CD1B171E1A0033CB62 /* youtyping@2x.png */; };
 		CA72CD961B1ED8D8004F72A7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA72CD951B1ED8D8004F72A7 /* Constants.swift */; };
+		CA72CD991B1F1605004F72A7 /* offline.png in Resources */ = {isa = PBXBuildFile; fileRef = CA72CD971B1F1605004F72A7 /* offline.png */; };
+		CA72CD9A1B1F1605004F72A7 /* online.png in Resources */ = {isa = PBXBuildFile; fileRef = CA72CD981B1F1605004F72A7 /* online.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -225,6 +227,8 @@
 		CA6704CC1B171E1A0033CB62 /* youtyping.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = youtyping.png; sourceTree = "<group>"; };
 		CA6704CD1B171E1A0033CB62 /* youtyping@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "youtyping@2x.png"; sourceTree = "<group>"; };
 		CA72CD951B1ED8D8004F72A7 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		CA72CD971B1F1605004F72A7 /* offline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = offline.png; sourceTree = "<group>"; };
+		CA72CD981B1F1605004F72A7 /* online.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = online.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -616,6 +620,8 @@
 		CA6704C51B171DF70033CB62 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				CA72CD971B1F1605004F72A7 /* offline.png */,
+				CA72CD981B1F1605004F72A7 /* online.png */,
 				CA099ED61B1D8BFC00C2CF29 /* xiaohua.png */,
 				CA099ED71B1D8BFC00C2CF29 /* xiaoming.png */,
 				CA6704C61B171E1A0033CB62 /* mebubble.png */,
@@ -711,10 +717,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				CA6704CF1B171E1A0033CB62 /* mebubble@2x.png in Resources */,
+				CA72CD991B1F1605004F72A7 /* offline.png in Resources */,
 				CA099ED81B1D8BFC00C2CF29 /* xiaohua.png in Resources */,
 				CA099ED91B1D8BFC00C2CF29 /* xiaoming.png in Resources */,
 				CA6704D21B171E1A0033CB62 /* yoububble.png in Resources */,
 				CA67046F1B16C4C10033CB62 /* Main.storyboard in Resources */,
+				CA72CD9A1B1F1605004F72A7 /* online.png in Resources */,
 				CA6704CE1B171E1A0033CB62 /* mebubble.png in Resources */,
 				CA099F7E1B1D912F00C2CF29 /* build-libidn.sh in Resources */,
 				CA6704741B16C4C10033CB62 /* LaunchScreen.xib in Resources */,
