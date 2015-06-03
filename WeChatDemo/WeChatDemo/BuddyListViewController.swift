@@ -8,48 +8,38 @@
 
 import UIKit
 
-class BuddyListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class BuddyListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, PresenceDelegate {
 
+    var appDelegate : AppDelegate!
+    
     var tvBuddyList : UITableView!
     var btnLogin : UIBarButtonItem!
     var btnStatus : UIBarButtonItem!
     
     var buddyList = [WXMessage]()
     var samples = [
-        "HelloWorld",
-        "Button",
-        "Text Field",
-        "Switch",
-        "Segmented Control",
-        "ImageView",
-        "Progress",
-        "Slider",
-        "ActionSheetView",
-        "ActivityIndicator + AlertView",
-        "PickView",
-        "Stepper",
-        "Scroll View",
-        "Date Picker",
-        "Web View",
-        "Web Browser",
-        "NSLayoutConstraint",
-        "TableView(WeChat)"
+        "HelloWorld"
     ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        self.navigationController?.navigationBar.translucent = false;
+        self.appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        self.appDelegate.presenceDelegate = self
+    
+        self.navigationController?.navigationBar.translucent = false
+        
         // 导航栏标题
-        self.navigationItem.title = "好友列表"
+        self.navigationItem.title = "请登录..."
         
         // 登录按钮
-        self.btnLogin = UIBarButtonItem(title: "登录", style: UIBarButtonItemStyle.Plain, target: self, action: Selector("login"))
+        self.btnLogin = UIBarButtonItem(title: "登录", style: UIBarButtonItemStyle.Plain, target: self, action: Selector("navigateToLogin"))
         self.navigationItem.rightBarButtonItem = self.btnLogin
         
         // 状态按钮
-        self.btnStatus = UIBarButtonItem(title: "状态", style: UIBarButtonItemStyle.Plain, target: self, action: Selector("status"))
+        self.btnStatus = UIBarButtonItem(title: "离线", style: UIBarButtonItemStyle.Plain, target: self, action: nil)
+        self.btnStatus.tintColor = UIColor.grayColor()
         self.navigationItem.leftBarButtonItem = self.btnStatus
         
         // 好友表格
@@ -63,18 +53,60 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
         
         // Constraints
         let views = ["table":self.tvBuddyList]
-//        let metrics = ["headHeight":((self.navigationController?.navigationBar.frame.height)!+20.0)]
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[table]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[table]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
     }
     
-    func login() {
+    override func viewWillAppear(animated: Bool) {
+        checkAccountAndLogin()
+    }
+    
+    // 检查账号是否存在，如存在则自动登录，否则跳转到登录界面
+    func checkAccountAndLogin() {
+        var defaults = NSUserDefaults.standardUserDefaults();
+        var user = defaults.stringForKey(Constants.KEY_USER_ID)
+        
+        println("user = \(user)")
+        
+        if (user == nil) {
+            navigateToLogin()
+        }
+        
+        self.appDelegate.connectToServer()
+    }
+    
+    func navigateToLogin() {
         var loginView = LoginViewController()
         self.navigationController?.pushViewController(loginView, animated: true)
     }
     
-    func status() {
+    func buddyOnline(presence: Presence) {
+        println("buddyOnline \(presence.name)")
+    }
     
+    func buddyOffline(presence: Presence) {
+        println("buddyOffine")
+    }
+    
+    func selfOnline(presence: Presence) {
+        println("selfOnline \(presence.name)")
+        changeStatusButton(presence)
+        changeNavigationTitle(presence)
+    }
+    
+    func selfOffline(presence: Presence) {
+        println("selfOffline")
+        changeStatusButton(presence)
+        changeNavigationTitle(presence)
+    }
+    
+    func changeStatusButton(presence: Presence) {
+        self.btnStatus.title = presence.isOnline ? "在线" : "离线"
+        self.btnStatus.tintColor = presence.isOnline ? UIColor.greenColor() : UIColor.grayColor()
+    }
+    
+    func changeNavigationTitle(presence: Presence) {
+        self.navigationItem.title = presence.isOnline ? presence.name + "的好友列表" : "请登录..."
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

@@ -10,6 +10,8 @@ import UIKit
 
 class LoginViewController: UIViewController {
 
+    var appDelegate : AppDelegate!
+    
     var btnDone : UIBarButtonItem!
     var btnCancel : UIBarButtonItem!
     
@@ -21,6 +23,8 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        
+        self.appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
         self.navigationController?.navigationBar.translucent = false
         self.view.backgroundColor = UIColor.whiteColor()
@@ -87,6 +91,11 @@ class LoginViewController: UIViewController {
         NSUserDefaults.standardUserDefaults().setObject(self.tfUserName.text, forKey: "wechatID")
         NSUserDefaults.standardUserDefaults().setObject(self.tfPassword.text, forKey: "wechatPwd")
         NSUserDefaults.standardUserDefaults().setObject(self.tfServer.text, forKey: "wechatServer")
+        NSUserDefaults.standardUserDefaults().synchronize()
+        
+        // 断开原先的用户
+        self.appDelegate.disconnect()
+        
         self.navigationController?.popViewControllerAnimated(true)
     }
     

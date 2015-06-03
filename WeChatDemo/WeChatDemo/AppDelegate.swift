@@ -13,26 +13,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate, XMPPStreamDelegate {
 
     var window: UIWindow?
     
-    var xmlStream : XMPPStream?
-    var isServerOn = false
-    var pwd = ""
-    
-    var statusDelegate : StatusDelegate?
-    
+    // Delegates
+    var presenceDelegate : PresenceDelegate?
     var messageDelegate : WXMessageDelegate?
     
+    var xmppStream : XMPPStream?
+    var isConnectedToServer = false
+    
     func xmppStreamDidConnect(sender: XMPPStream!) {
+        println("xmppStreamDidConnect \(self.xmppStream?.isConnected())")
         
-        self.isServerOn = true
+        self.isConnectedToServer = true
+        var pwd = NSUserDefaults.standardUserDefaults().stringForKey(Constants.KEY_PASSWORD)
         
-        self.xmlStream!.authenticateWithPassword(self.pwd, error: nil)
+        var error : NSError?
+        self.xmppStream!.authenticateWithPassword(pwd, error: &error)
+        
+        if error != nil {
+            println(error)
+        }
     }
     
     func xmppStreamDidAuthenticate(sender: XMPPStream!) {
+        println("xmppStreamDidAuthenticate")
         goOnline()
     }
     
+    func xmppStream(sender: XMPPStream!, didNotAuthenticate error: DDXMLElement!) {
+        println(error)
+    }
+    
+    // 收到聊天消息
     func xmppStream(sender: XMPPStream!, didReceiveMessage message: XMPPMessage!) {
+        
+        println("didReceiveMessage")
         
         if message.isChatMessage() {
             var msg = WXMessage()
@@ -56,68 +70,85 @@ class AppDelegate: UIResponder, UIApplicationDelegate, XMPPStreamDelegate {
     }
     
     // 收到状态信息
-    func xmppStream(sender: XMPPStream!, didSendPresence presence: XMPPPresence!) {
+    func xmppStream(sender: XMPPStream!, didReceivePresence presence: XMPPPresence!) {
         
+        println("didReceivePresence")
         let mine = sender.myJID.user // 自己的用户名
         let fromUser = presence.from().user // 好友用户名
         let fromDomain = presence.from().domain // 好友所在的域
         let type = presence.type()
         
-        // 状态信息不是自己的
+        var presence = Presence(name: fromUser + "@" + fromDomain)
+        presence.isOnline = type == "available" ? true : false
+        
+        // 好友状态
         if (fromUser != mine) {
-            
-            var status = Status(name: fromUser + "@" + fromDomain)
-            
-            // 上线
-            if type == "available" {
-                status.isOnline = true
-                self.statusDelegate?.online(status)
-            } else if type == "unavailable" {
-                status.isOnline = false
-                self.statusDelegate?.online(status)
+            switch presence.isOnline {
+            case true:
+                self.presenceDelegate?.buddyOnline(presence)
+            default:
+                self.presenceDelegate?.buddyOffline(presence)
+            }
+        } else {
+            // 自己状态
+            switch presence.isOnline {
+            case true:
+                self.presenceDelegate?.selfOnline(presence)
+            default:
+                self.presenceDelegate?.selfOffline(presence)
             }
         }
     }
     
-    func buildStream() {
-        self.xmlStream = XMPPStream()
-        self.xmlStream?.addDelegate(self, delegateQueue: dispatch_get_main_queue())
+    func setupXMPPStream() {
+        self.xmppStream = XMPPStream()
+        self.xmppStream?.addDelegate(self, delegateQueue: dispatch_get_main_queue())
     }
     
     func goOnline() {
-        var p = XMPPPresence()
-        self.xmlStream!.sendElement(p)
+        var p = XMPPPresence(type: "available")
+        self.xmppStream!.sendElement(p)
     }
     
     func goOffline() {
-        var p = XMPPPresence(name: "unavailable")
-        self.xmlStream!.sendElement(p)
+        var p = XMPPPresence(type: "unavailable")
+        self.xmppStream!.sendElement(p)
     }
     
     func connectToServer() -> Bool{
-        buildStream()
         
-        if xmlStream!.isConnected() {
+        setupXMPPStream()
+        
+        if self.xmppStream!.isConnected() {
             return true
         }
         
-        let user = NSUserDefaults.standardUserDefaults().stringForKey("wechatID")
-        let pwd = NSUserDefaults.standardUserDefaults().stringForKey("wechatPwd")
-        let server = NSUserDefaults.standardUserDefaults().stringForKey("wechatServer")
+        var defaults = NSUserDefaults.standardUserDefaults();
+        var user = defaults.stringForKey(Constants.KEY_USER_ID)
+        var server = defaults.stringForKey(Constants.KEY_SERVER)
         
-        if (user != nil && pwd != nil) {
-            self.xmlStream?.myJID = XMPPJID.jidWithString(user!)
-            self.pwd = pwd!
-            
-            self.xmlStream?.connectWithTimeout(5000, error: nil)
+//        user = "roger@rogeryee.com"
+//        server = "localhost"
+        
+        if ((user == nil || user == "") && (server == nil || server == "")) {
+            return false
         }
         
-        return false
+        self.xmppStream?.myJID = XMPPJID.jidWithString(user)
+        self.xmppStream?.hostName = server
+        
+        var error : NSError?
+        if ((self.xmppStream?.connectWithTimeout(5000, error: &error)) == nil) {
+            println("Cannot connect to Server (\(server)), error is (error!)")
+            return false
+        }
+        
+        return true
     }
     
     func disconnect() {
         goOffline()
-        self.xmlStream?.disconnect()
+        self.xmppStream?.disconnect()
     }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {

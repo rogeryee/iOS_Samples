@@ -61,7 +61,7 @@
 		CA099F8D1B1D91D300C2CF29 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA099F8C1B1D91D300C2CF29 /* UIKit.framework */; };
 		CA099F8F1B1D91DE00C2CF29 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA099F8E1B1D91DE00C2CF29 /* Foundation.framework */; };
 		CA099F911B1D91E600C2CF29 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA099F901B1D91E600C2CF29 /* CoreGraphics.framework */; };
-		CA099F951B1D9D1D00C2CF29 /* StatusDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA099F941B1D9D1D00C2CF29 /* StatusDelegate.swift */; };
+		CA099F951B1D9D1D00C2CF29 /* PresenceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA099F941B1D9D1D00C2CF29 /* PresenceDelegate.swift */; };
 		CA099F971B1D9DEC00C2CF29 /* WXMessageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA099F961B1D9DEC00C2CF29 /* WXMessageDelegate.swift */; };
 		CA67046A1B16C4C10033CB62 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6704691B16C4C10033CB62 /* AppDelegate.swift */; };
 		CA67046C1B16C4C10033CB62 /* BuddyListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA67046B1B16C4C10033CB62 /* BuddyListViewController.swift */; };
@@ -80,6 +80,7 @@
 		CA6704D31B171E1A0033CB62 /* yoububble@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CA6704CB1B171E1A0033CB62 /* yoububble@2x.png */; };
 		CA6704D41B171E1A0033CB62 /* youtyping.png in Resources */ = {isa = PBXBuildFile; fileRef = CA6704CC1B171E1A0033CB62 /* youtyping.png */; };
 		CA6704D51B171E1A0033CB62 /* youtyping@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CA6704CD1B171E1A0033CB62 /* youtyping@2x.png */; };
+		CA72CD961B1ED8D8004F72A7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA72CD951B1ED8D8004F72A7 /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -198,7 +199,7 @@
 		CA099F8E1B1D91DE00C2CF29 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		CA099F901B1D91E600C2CF29 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		CA099F931B1D949600C2CF29 /* wechatxmpp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = wechatxmpp.h; sourceTree = "<group>"; };
-		CA099F941B1D9D1D00C2CF29 /* StatusDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusDelegate.swift; sourceTree = "<group>"; };
+		CA099F941B1D9D1D00C2CF29 /* PresenceDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresenceDelegate.swift; sourceTree = "<group>"; };
 		CA099F961B1D9DEC00C2CF29 /* WXMessageDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WXMessageDelegate.swift; sourceTree = "<group>"; };
 		CA6704641B16C4C10033CB62 /* WeChatDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeChatDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA6704681B16C4C10033CB62 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -223,6 +224,7 @@
 		CA6704CB1B171E1A0033CB62 /* yoububble@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yoububble@2x.png"; sourceTree = "<group>"; };
 		CA6704CC1B171E1A0033CB62 /* youtyping.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = youtyping.png; sourceTree = "<group>"; };
 		CA6704CD1B171E1A0033CB62 /* youtyping@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "youtyping@2x.png"; sourceTree = "<group>"; };
+		CA72CD951B1ED8D8004F72A7 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -567,12 +569,13 @@
 				CA6704C21B1716430033CB62 /* ChatViewController.swift */,
 				CA67048C1B16E6160033CB62 /* LoginViewController.swift */,
 				CA67048A1B16E5150033CB62 /* Models.swift */,
-				CA099F941B1D9D1D00C2CF29 /* StatusDelegate.swift */,
+				CA099F941B1D9D1D00C2CF29 /* PresenceDelegate.swift */,
 				CA099F961B1D9DEC00C2CF29 /* WXMessageDelegate.swift */,
 				CA6704701B16C4C10033CB62 /* Images.xcassets */,
 				CA6704721B16C4C10033CB62 /* LaunchScreen.xib */,
 				CA67046D1B16C4C10033CB62 /* Main.storyboard */,
 				CA6704671B16C4C10033CB62 /* Supporting Files */,
+				CA72CD951B1ED8D8004F72A7 /* Constants.swift */,
 			);
 			path = WeChatDemo;
 			sourceTree = "<group>";
@@ -749,7 +752,7 @@
 				CA099F661B1D912F00C2CF29 /* XMPPParser.m in Sources */,
 				CA099F691B1D912F00C2CF29 /* DDList.m in Sources */,
 				CA67048D1B16E6160033CB62 /* LoginViewController.swift in Sources */,
-				CA099F951B1D9D1D00C2CF29 /* StatusDelegate.swift in Sources */,
+				CA099F951B1D9D1D00C2CF29 /* PresenceDelegate.swift in Sources */,
 				CA099F701B1D912F00C2CF29 /* GCDAsyncSocket.m in Sources */,
 				CA099F5D1B1D912F00C2CF29 /* NSData+XMPP.m in Sources */,
 				CA099F6D1B1D912F00C2CF29 /* XMPPSRVResolver.m in Sources */,
@@ -762,6 +765,7 @@
 				CA099F5A1B1D912F00C2CF29 /* XMPPSCRAMSHA1Authentication.m in Sources */,
 				CA67048B1B16E5150033CB62 /* Models.swift in Sources */,
 				CA099F681B1D912F00C2CF29 /* XMPPStream.m in Sources */,
+				CA72CD961B1ED8D8004F72A7 /* Constants.swift in Sources */,
 				CA099F721B1D912F00C2CF29 /* DDASLLogger.m in Sources */,
 				CA099F6B1B1D912F00C2CF29 /* RFImageToDataTransformer.m in Sources */,
 				CA099F6E1B1D912F00C2CF29 /* XMPPStringPrep.m in Sources */,

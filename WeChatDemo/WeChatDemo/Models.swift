@@ -27,7 +27,7 @@ class WXMessage {
     var isFromMe = false
 }
 
-class Status {
+class Presence {
     var name : String = ""
     var isOnline : Bool = false
     
