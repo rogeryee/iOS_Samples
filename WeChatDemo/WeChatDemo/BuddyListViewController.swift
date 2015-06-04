@@ -41,6 +41,7 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
         
         // 好友表格
         self.tvBuddyList = UITableView(frame:CGRectZero)
+        self.tvBuddyList.separatorStyle = UITableViewCellSeparatorStyle.None
         self.tvBuddyList.delegate = self
         self.tvBuddyList.dataSource = self
         self.tvBuddyList.registerClass(UITableViewCell.self, forCellReuseIdentifier: "SampleCell")
@@ -154,9 +155,12 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("SampleCell", forIndexPath: indexPath) as! UITableViewCell
-        cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-        cell.textLabel!.text = self.buddies[indexPath.row].name + " \(self.buddies[indexPath.row].isOnline)"
+//        let cell = tableView.dequeueReusableCellWithIdentifier("SampleCell", forIndexPath: indexPath) as! UITableViewCell
+//        cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+//        cell.textLabel!.text = self.buddies[indexPath.row].name + " \(self.buddies[indexPath.row].isOnline)"
+//        return cell
+        
+        var cell = BuddyTableViewCell(reuseIdentifier: "SampleCell", buddy: self.buddies[indexPath.row])
         return cell
     }
     
@@ -167,9 +171,52 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
         self.navigationController!.pushViewController(detailedViewController, animated: true)
     }
     
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 50.0
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+}
+
+class BuddyTableViewCell:UITableViewCell {
+    var imgStatus:UIImageView!
+    var labelName:UILabel!
+    var buddy:UserViewModel!
+    
+    init(reuseIdentifier cellId:String, buddy:UserViewModel)
+    {
+        super.init(style: UITableViewCellStyle.Default, reuseIdentifier:cellId)
+        self.buddy = buddy
+        
+        render()
+    }
+    
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func render() {
+        self.selectionStyle = UITableViewCellSelectionStyle.None
+        
+        var imgName = self.buddy.isOnline ? "online" : "offline"
+        self.imgStatus = UIImageView(image: UIImage(named:(imgName)))
+        self.imgStatus.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.addSubview(self.imgStatus)
+        
+        self.labelName = UILabel()
+        self.labelName.textColor=UIColor.blackColor()
+        self.labelName.textAlignment = NSTextAlignment.Left
+        self.labelName.text = self.buddy.name + "(\(self.buddy.unreadMessageNumber))"
+        self.labelName.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.addSubview(self.labelName)
+        
+        let views = ["img": self.imgStatus, "label":self.labelName]
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-5-[img(==30)]-10-[label]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[img(==30)]-10-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[label(==30)]-10-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
     }
 }
 
