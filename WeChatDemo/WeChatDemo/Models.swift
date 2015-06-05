@@ -11,18 +11,14 @@ import Foundation
 class UserViewModel {
     var name : String = ""
     var isOnline : Bool = false
-    var unreadMessageNumber = 0
     
     init(name:String) {
         self.name = name
     }
-//    var name : String!
-//    var logo : String!
-//    
-//    init(name:String, logo:String) {
-//        self.name = name
-//        self.logo = logo
-//    }
+}
+
+class Buddy : UserViewModel {
+    var unreadMessageNumber = 0
 }
 
 // 与服务端通讯消息格式类

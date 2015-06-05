@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BuddyListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, PresenceDelegate {
+class BuddyListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, PresenceDelegate, WXMessageDelegate {
 
     var appDelegate : AppDelegate!
     
@@ -16,7 +16,7 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
     var btnLogin : UIBarButtonItem!
     var btnStatus : UIBarButtonItem!
 
-    var buddies = [UserViewModel]()
+    var buddies = [Buddy]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +24,7 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
         
         self.appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         self.appDelegate.presenceDelegate = self
+        self.appDelegate.messageDelegate = self
     
         self.navigationController?.navigationBar.translucent = false
         
@@ -44,7 +45,7 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
         self.tvBuddyList.separatorStyle = UITableViewCellSeparatorStyle.None
         self.tvBuddyList.delegate = self
         self.tvBuddyList.dataSource = self
-        self.tvBuddyList.registerClass(UITableViewCell.self, forCellReuseIdentifier: "SampleCell")
+        self.tvBuddyList.registerClass(BuddyTableViewCell.self, forCellReuseIdentifier: BuddyTableViewCell.CELL_IDENTITY)
         self.tvBuddyList.scrollEnabled = true;
         self.tvBuddyList.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.view.addSubview(self.tvBuddyList)
@@ -89,19 +90,12 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
         println("buddyOnline \(presence.name)")
         
         var name = presence.name
-        var buddy : UserViewModel?
-        
-        for b in self.buddies {
-            if b.name == name {
-                buddy = b
-            }
-        }
-        
+        var buddy = findBuddyByName(name)
         if buddy == nil {
-            buddy = UserViewModel(name:name)
+            buddy = Buddy(name:name)
+            buddy!.isOnline = true
             buddies.append(buddy!)
         }
-        buddy?.isOnline = true
         
         self.tvBuddyList.reloadData()
     }
@@ -110,19 +104,12 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
         println("buddyOffine")
         
         var name = presence.name
-        var buddy : UserViewModel?
-        
-        for b in self.buddies {
-            if b.name == name {
-                buddy = b
-            }
-        }
-        
+        var buddy = findBuddyByName(name)
         if buddy == nil {
-            buddy = UserViewModel(name:name)
+            buddy = Buddy(name:name)
+            buddy!.isOnline = false
             buddies.append(buddy!)
         }
-        buddy?.isOnline = false
         
         self.tvBuddyList.reloadData()
     }
@@ -137,6 +124,37 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
         println("selfOffline")
         changeStatusButton(presence)
         changeNavigationTitle(presence)
+    }
+    
+    func newMessage(message: WXMessage) {
+        return
+    }
+    
+    func receiveMessage(message: WXMessage) {
+        var name = message.from
+        var buddy = findBuddyByName(name)
+        if buddy == nil {
+            return
+        }
+        
+        if !message.isComposing {
+            buddy!.unreadMessageNumber++
+        }
+        
+        self.tvBuddyList.reloadData()
+    }
+    
+    func findBuddyByName(name:String) -> Buddy? {
+        var buddy : Buddy?
+        
+        for b in self.buddies {
+            if b.name == name {
+                buddy = b
+                break
+            }
+        }
+        
+        return buddy
     }
     
     func changeStatusButton(presence: Presence) {
@@ -155,13 +173,14 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCellWithIdentifier("SampleCell", forIndexPath: indexPath) as! UITableViewCell
-//        cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-//        cell.textLabel!.text = self.buddies[indexPath.row].name + " \(self.buddies[indexPath.row].isOnline)"
-//        return cell
+        var cell : BuddyTableViewCell? = tableView.dequeueReusableCellWithIdentifier(BuddyTableViewCell.CELL_IDENTITY) as? BuddyTableViewCell
+        if cell == nil {
+            cell = BuddyTableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: BuddyTableViewCell.CELL_IDENTITY)
+        }
         
-        var cell = BuddyTableViewCell(reuseIdentifier: "SampleCell", buddy: self.buddies[indexPath.row])
-        return cell
+        cell!.render(self.buddies[indexPath.row])
+        
+        return cell!
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -182,23 +201,32 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
 }
 
 class BuddyTableViewCell:UITableViewCell {
+    
+    static var CELL_IDENTITY = "BUDDY_CELL"
+    
     var imgStatus:UIImageView!
     var labelName:UILabel!
-    var buddy:UserViewModel!
+    var buddy:Buddy!
     
-    init(reuseIdentifier cellId:String, buddy:UserViewModel)
-    {
-        super.init(style: UITableViewCellStyle.Default, reuseIdentifier:cellId)
-        self.buddy = buddy
-        
-        render()
+//    init(reuseIdentifier cellId:String)
+//    {
+//        super.init(style: UITableViewCellStyle.Default, reuseIdentifier:cellId)
+//    }
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: UITableViewCellStyle.Default, reuseIdentifier:reuseIdentifier)
     }
     
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func render() {
+    func render(buddy:Buddy!) {
+        if buddy == nil {
+            return
+        }
+        
+        self.buddy = buddy
         self.selectionStyle = UITableViewCellSelectionStyle.None
         
         var imgName = self.buddy.isOnline ? "online" : "offline"
@@ -209,7 +237,9 @@ class BuddyTableViewCell:UITableViewCell {
         self.labelName = UILabel()
         self.labelName.textColor=UIColor.blackColor()
         self.labelName.textAlignment = NSTextAlignment.Left
-        self.labelName.text = self.buddy.name + "(\(self.buddy.unreadMessageNumber))"
+        
+        var unreadMsg = self.buddy.unreadMessageNumber > 0 ? "(\(self.buddy.unreadMessageNumber))" : ""
+        self.labelName.text = self.buddy.name + unreadMsg
         self.labelName.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.addSubview(self.labelName)
         
