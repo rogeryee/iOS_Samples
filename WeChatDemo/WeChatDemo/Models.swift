@@ -8,6 +8,11 @@
 
 import Foundation
 
+enum ChatType {
+    case Mine
+    case Other
+}
+
 class UserViewModel {
     var name : String = ""
     var isOnline : Bool = false

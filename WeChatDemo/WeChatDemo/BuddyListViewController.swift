@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BuddyListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, PresenceDelegate, WXMessageDelegate {
+class BuddyListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, PresenceDelegate, MessageDelegate {
 
     var appDelegate : AppDelegate!
     
@@ -93,10 +93,10 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
         var buddy = findBuddyByName(name)
         if buddy == nil {
             buddy = Buddy(name:name)
-            buddy!.isOnline = true
             buddies.append(buddy!)
         }
         
+        buddy!.isOnline = true
         self.tvBuddyList.reloadData()
     }
     
@@ -107,10 +107,10 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
         var buddy = findBuddyByName(name)
         if buddy == nil {
             buddy = Buddy(name:name)
-            buddy!.isOnline = false
             buddies.append(buddy!)
         }
         
+        buddy!.isOnline = false
         self.tvBuddyList.reloadData()
     }
     
@@ -185,6 +185,7 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        self.buddies[indexPath.row].unreadMessageNumber = 0 // 重置未读信息数
         
         var detailedViewController = ChatViewController()
         self.navigationController!.pushViewController(detailedViewController, animated: true)
@@ -208,11 +209,6 @@ class BuddyTableViewCell:UITableViewCell {
     var labelName:UILabel!
     var buddy:Buddy!
     
-//    init(reuseIdentifier cellId:String)
-//    {
-//        super.init(style: UITableViewCellStyle.Default, reuseIdentifier:cellId)
-//    }
-    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: UITableViewCellStyle.Default, reuseIdentifier:reuseIdentifier)
     }
@@ -230,18 +226,27 @@ class BuddyTableViewCell:UITableViewCell {
         self.selectionStyle = UITableViewCellSelectionStyle.None
         
         var imgName = self.buddy.isOnline ? "online" : "offline"
-        self.imgStatus = UIImageView(image: UIImage(named:(imgName)))
-        self.imgStatus.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.addSubview(self.imgStatus)
-        
-        self.labelName = UILabel()
-        self.labelName.textColor=UIColor.blackColor()
-        self.labelName.textAlignment = NSTextAlignment.Left
+        var image = UIImage(named:(imgName))
+        if self.imgStatus == nil {
+            self.imgStatus = UIImageView(image: image)
+            self.imgStatus.setTranslatesAutoresizingMaskIntoConstraints(false)
+            self.addSubview(self.imgStatus)
+        } else {
+            self.imgStatus.image = image
+        }
         
         var unreadMsg = self.buddy.unreadMessageNumber > 0 ? "(\(self.buddy.unreadMessageNumber))" : ""
-        self.labelName.text = self.buddy.name + unreadMsg
-        self.labelName.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.addSubview(self.labelName)
+        var labelNameContent = self.buddy.name + unreadMsg
+        if self.labelName == nil {
+            self.labelName = UILabel()
+            self.labelName.textColor=UIColor.blackColor()
+            self.labelName.textAlignment = NSTextAlignment.Left
+            self.labelName.text = labelNameContent
+            self.labelName.setTranslatesAutoresizingMaskIntoConstraints(false)
+            self.addSubview(self.labelName)
+        } else {
+            self.labelName.text = labelNameContent
+        }
         
         let views = ["img": self.imgStatus, "label":self.labelName]
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-5-[img(==30)]-10-[label]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));

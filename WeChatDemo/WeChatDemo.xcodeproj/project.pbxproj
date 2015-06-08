@@ -62,7 +62,7 @@
 		CA099F8F1B1D91DE00C2CF29 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA099F8E1B1D91DE00C2CF29 /* Foundation.framework */; };
 		CA099F911B1D91E600C2CF29 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA099F901B1D91E600C2CF29 /* CoreGraphics.framework */; };
 		CA099F951B1D9D1D00C2CF29 /* PresenceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA099F941B1D9D1D00C2CF29 /* PresenceDelegate.swift */; };
-		CA099F971B1D9DEC00C2CF29 /* WXMessageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA099F961B1D9DEC00C2CF29 /* WXMessageDelegate.swift */; };
+		CA099F971B1D9DEC00C2CF29 /* MessageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA099F961B1D9DEC00C2CF29 /* MessageDelegate.swift */; };
 		CA67046A1B16C4C10033CB62 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6704691B16C4C10033CB62 /* AppDelegate.swift */; };
 		CA67046C1B16C4C10033CB62 /* BuddyListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA67046B1B16C4C10033CB62 /* BuddyListViewController.swift */; };
 		CA67046F1B16C4C10033CB62 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CA67046D1B16C4C10033CB62 /* Main.storyboard */; };
@@ -202,7 +202,7 @@
 		CA099F901B1D91E600C2CF29 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		CA099F931B1D949600C2CF29 /* wechatxmpp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = wechatxmpp.h; sourceTree = "<group>"; };
 		CA099F941B1D9D1D00C2CF29 /* PresenceDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresenceDelegate.swift; sourceTree = "<group>"; };
-		CA099F961B1D9DEC00C2CF29 /* WXMessageDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WXMessageDelegate.swift; sourceTree = "<group>"; };
+		CA099F961B1D9DEC00C2CF29 /* MessageDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageDelegate.swift; sourceTree = "<group>"; };
 		CA6704641B16C4C10033CB62 /* WeChatDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeChatDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA6704681B16C4C10033CB62 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CA6704691B16C4C10033CB62 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -569,17 +569,15 @@
 			isa = PBXGroup;
 			children = (
 				CA6704691B16C4C10033CB62 /* AppDelegate.swift */,
-				CA67046B1B16C4C10033CB62 /* BuddyListViewController.swift */,
-				CA6704C21B1716430033CB62 /* ChatViewController.swift */,
-				CA67048C1B16E6160033CB62 /* LoginViewController.swift */,
+				CAD200F31B25B120007044EB /* viewCotrollers */,
+				CA72CD951B1ED8D8004F72A7 /* Constants.swift */,
 				CA67048A1B16E5150033CB62 /* Models.swift */,
 				CA099F941B1D9D1D00C2CF29 /* PresenceDelegate.swift */,
-				CA099F961B1D9DEC00C2CF29 /* WXMessageDelegate.swift */,
+				CA099F961B1D9DEC00C2CF29 /* MessageDelegate.swift */,
 				CA6704701B16C4C10033CB62 /* Images.xcassets */,
 				CA6704721B16C4C10033CB62 /* LaunchScreen.xib */,
 				CA67046D1B16C4C10033CB62 /* Main.storyboard */,
 				CA6704671B16C4C10033CB62 /* Supporting Files */,
-				CA72CD951B1ED8D8004F72A7 /* Constants.swift */,
 			);
 			path = WeChatDemo;
 			sourceTree = "<group>";
@@ -634,6 +632,16 @@
 				CA6704CD1B171E1A0033CB62 /* youtyping@2x.png */,
 			);
 			name = images;
+			sourceTree = "<group>";
+		};
+		CAD200F31B25B120007044EB /* viewCotrollers */ = {
+			isa = PBXGroup;
+			children = (
+				CA67046B1B16C4C10033CB62 /* BuddyListViewController.swift */,
+				CA6704C21B1716430033CB62 /* ChatViewController.swift */,
+				CA67048C1B16E6160033CB62 /* LoginViewController.swift */,
+			);
+			name = viewCotrollers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -785,7 +793,7 @@
 				CA099F771B1D912F00C2CF29 /* DDDispatchQueueLogFormatter.m in Sources */,
 				CA099F741B1D912F00C2CF29 /* DDLog.m in Sources */,
 				CA099F731B1D912F00C2CF29 /* DDFileLogger.m in Sources */,
-				CA099F971B1D9DEC00C2CF29 /* WXMessageDelegate.swift in Sources */,
+				CA099F971B1D9DEC00C2CF29 /* MessageDelegate.swift in Sources */,
 				CA099F631B1D912F00C2CF29 /* XMPPJID.m in Sources */,
 				CA6704C31B1716430033CB62 /* ChatViewController.swift in Sources */,
 				CA099F611B1D912F00C2CF29 /* XMPPElement.m in Sources */,

@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, XMPPStreamDelegate {
     
     // Delegates
     var presenceDelegate : PresenceDelegate?
-    var messageDelegate : WXMessageDelegate?
+    var messageDelegate : MessageDelegate?
     
     var xmppStream : XMPPStream?
     var isConnectedToServer = false

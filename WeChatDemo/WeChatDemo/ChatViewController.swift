@@ -405,10 +405,7 @@ class TableViewCell:UITableViewCell {
 }
 
 
-enum ChatType {
-    case Mine
-    case Other
-}
+
 
 class User{
     var username:String = ""

@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol WXMessageDelegate {
+protocol MessageDelegate {
     func newMessage(message : WXMessage)
     func receiveMessage(message : WXMessage)
 }
