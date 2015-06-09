@@ -126,19 +126,19 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
         changeNavigationTitle(presence)
     }
     
-    func newMessage(message: WXMessage) {
+    func newMessage(message: Message) {
         return
     }
     
-    func receiveMessage(message: WXMessage) {
-        var name = message.from
+    func receiveMessage(message: Message) {
+        var name = message.from.name
         var buddy = findBuddyByName(name)
         if buddy == nil {
             return
         }
         
         if !message.isComposing {
-            buddy!.unreadMessageNumber++
+            buddy!.unreadMessages.append(message)
         }
         
         self.tvBuddyList.reloadData()
@@ -185,10 +185,9 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        self.buddies[indexPath.row].unreadMessageNumber = 0 // 重置未读信息数
-        
-        var detailedViewController = ChatViewController()
+        var detailedViewController = ChatViewController(messages: self.buddies[indexPath.row].unreadMessages, buddy: self.buddies[indexPath.row])
         self.navigationController!.pushViewController(detailedViewController, animated: true)
+        tableView.reloadData()
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -235,7 +234,7 @@ class BuddyTableViewCell:UITableViewCell {
             self.imgStatus.image = image
         }
         
-        var unreadMsg = self.buddy.unreadMessageNumber > 0 ? "(\(self.buddy.unreadMessageNumber))" : ""
+        var unreadMsg = self.buddy.unreadMessages.count > 0 ? "(\(self.buddy.unreadMessages.count))" : ""
         var labelNameContent = self.buddy.name + unreadMsg
         if self.labelName == nil {
             self.labelName = UILabel()

@@ -20,6 +20,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, XMPPStreamDelegate {
     var xmppStream : XMPPStream?
     var isConnectedToServer = false
     
+    func isLoginUser(name : String) -> Bool {
+        return (name == self.xmppStream?.myJID.user)
+    }
+    
     func xmppStreamDidConnect(sender: XMPPStream!) {
         println("xmppStreamDidConnect \(self.xmppStream?.isConnected())")
         
@@ -53,7 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, XMPPStreamDelegate {
         println("didReceiveMessage \(message)")
         
         if message.isChatMessage() {
-            var msg = WXMessage()
+            var msg = TextMessage()
             
             if message.elementForName("composing") != nil {
                 msg.isComposing = true // 对方正在输入
@@ -67,7 +71,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, XMPPStreamDelegate {
                 msg.body = body.stringValue() // 正文
             }
             
-            msg.from = message.from().user + "@" + message.from().domain
+            msg.from = User(name: message.from().user)
+            msg.from.logo = isLoginUser(message.from().user) ? "xiaoming" : "xiaohua"
             
             self.messageDelegate?.receiveMessage(msg)
         }
@@ -82,7 +87,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, XMPPStreamDelegate {
         let fromDomain = presence.from().domain // 好友所在的域
         let type = presence.type()
         
-        var presence = Presence(name: fromUser + "@" + fromDomain)
+        var presence = Presence(name: fromUser)
         presence.isOnline = type == "available" ? true : false
         
         // 好友状态
@@ -117,6 +122,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, XMPPStreamDelegate {
     func goOffline() {
         var p = XMPPPresence(type: "unavailable")
         self.xmppStream!.sendElement(p)
+    }
+    
+    func sendMessage(element : DDXMLElement) {
+        self.xmppStream!.sendElement(element)
     }
     
     func connectToServer() -> Bool{

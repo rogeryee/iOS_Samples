@@ -13,26 +13,35 @@ enum ChatType {
     case Other
 }
 
-class UserViewModel {
+class User {
     var name : String = ""
     var isOnline : Bool = false
+    var logo : String = "xiaoming"
     
     init(name:String) {
         self.name = name
     }
 }
 
-class Buddy : UserViewModel {
-    var unreadMessageNumber = 0
+class Buddy : User {
+    var unreadMessages = [Message]()
+    
+    func resetUnreadMessages() {
+        self.unreadMessages.removeAll(keepCapacity: false)
+    }
 }
 
 // 与服务端通讯消息格式类
-class WXMessage {
-    var body = ""
-    var from = ""
+class Message {
+    var from : User!
     var isComposing = false
     var isDelay = false
     var isFromMe = false
+    var date = NSDate()
+}
+
+class TextMessage : Message {
+    var body = ""
 }
 
 class Presence {

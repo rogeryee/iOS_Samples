@@ -9,6 +9,6 @@
 import Foundation
 
 protocol MessageDelegate {
-    func newMessage(message : WXMessage)
-    func receiveMessage(message : WXMessage)
+    func newMessage(message : Message)
+    func receiveMessage(message : Message)
 }

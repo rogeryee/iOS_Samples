@@ -8,20 +8,38 @@
 
 import UIKit
 
-class ChatViewController: UIViewController {
+class ChatViewController: UIViewController, MessageDelegate {
     
-    var chats : NSMutableArray!
+    var appDelegate : AppDelegate!
+    
+    var messages : Array<Message>!
+    var buddy : Buddy!
+    
     var tableView : TableView!
     var sendView : SendView!
     
+    init(messages:[Message], buddy : Buddy) {
+        super.init(nibName: nil, bundle: nil)
+        
+        self.messages = messages
+        
+        self.buddy = buddy
+        self.buddy.resetUnreadMessages() // 重置未读信息数
+    }
+
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
         
+        // Do any additional setup after loading the view.
+        self.appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        self.appDelegate.messageDelegate = self
         self.view.backgroundColor = UIColor.whiteColor()
         
-        self.tableView = TableView(frame:CGRectMake(0, 20, self.view.frame.size.width, self.view.frame.size.height - 20))
+        self.tableView = TableView(frame:CGRectMake(0, 20, self.view.frame.size.width, self.view.frame.size.height - 20), messages: self.messages)
         self.tableView.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.tableView.reloadData()
         self.view.addSubview(self.tableView)
@@ -38,7 +56,33 @@ class ChatViewController: UIViewController {
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[tableView]-[sendView(==50)]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
     }
     
-    func sendMessage(message:Message) {
+    func sendMessage(message:Message!) {
+        
+        if message == nil {
+            return
+        }
+        
+        var body:DDXMLElement = DDXMLElement.elementWithName("body") as! DDXMLElement
+        body.setStringValue((message as! TextMessage).body)
+        
+        //生成XML消息文档
+        var mes:DDXMLElement = DDXMLElement.elementWithName("message") as! DDXMLElement
+        
+        //消息类型
+        mes.addAttributeWithName("type",stringValue:"chat")
+        
+        //发送给谁
+        mes.addAttributeWithName("to" ,stringValue:(self.buddy.name + "@" + (self.appDelegate.xmppStream?.myJID.domain)!))
+        
+        //由谁发送
+        mes.addAttributeWithName("from" ,stringValue:(message.from.name + "@" + (self.appDelegate.xmppStream?.myJID.domain)!))
+        
+        //组合
+        mes.addChild(body)
+        
+        //发送消息
+        self.appDelegate.sendMessage(mes)
+        
         tableView.addMessage(message)
     }
     
@@ -47,36 +91,18 @@ class ChatViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
-}
-
-class DemoData {
-    var data : [Message]!
-    init() {
-        var me = User(name:"me",logo:"xiaoming.png")
-        var you = User(name:"you",logo:"xiaohua.png")
-        
-        var first =  Message(body:"嘿，这张照片咋样，我在泸沽湖拍的呢！", user:me,  date:NSDate(timeIntervalSinceNow:-3600*24), mtype:ChatType.Mine)
-//        var second =  Message(image:UIImage(named:"luguhu.jpeg")!,user:me, date:NSDate(timeIntervalSinceNow:-3000*24), mtype:ChatType.Mine)
-        var third =  Message(body:"太赞了，我也想去那看看呢！",user:you, date:NSDate(timeIntervalSinceNow:-2900*24), mtype:ChatType.Other)
-        var fouth =  Message(body:"嗯，下次我们一起去吧！",user:me, date:NSDate(timeIntervalSinceNow:-28*24), mtype:ChatType.Mine)
-        var fifth =  Message(body:"好的，一定！",user:you, date:NSDate(timeIntervalSinceNow:-20*24), mtype:ChatType.Other)
-        
-        data = [first, third, fouth, fifth]
+    func newMessage(message: Message) {
+        return
     }
     
-    func getData() -> [Message] {
-        return self.data
+    func receiveMessage(message: Message) {
+        if buddy == nil {
+            return
+        }
+        
+        if buddy.name == message.from.name {
+            self.tableView.addMessage(message)
+        }
     }
 }
 
@@ -128,26 +154,24 @@ class SendView:UIView, UITextFieldDelegate {
     
     func sendMessage()
     {
-        var sender = self.msgTextField
+        var msg = TextMessage()
+        msg.body = self.msgTextField.text
+        msg.from = User(name: (parent.appDelegate.xmppStream?.myJID.user)!)
+        msg.isDelay = false
+        msg.isComposing = false
+        msg.isFromMe = true
         
-        var me = User(name:"me",logo:"xiaoming.png")
-        var you = User(name:"you",logo:"xiaohua.png")
+        parent.sendMessage(msg)
         
-        var thisChat =  Message(body:sender.text, user:me, date:NSDate(timeIntervalSinceNow:0), mtype:ChatType.Mine)
-        var thatChat =  Message(body:"你说的是：\(sender.text)!", user:you, date:NSDate(timeIntervalSinceNow:10), mtype:ChatType.Other)
-        
-        parent.sendMessage(thisChat)
-        parent.sendMessage(thatChat)
-        
-        sender.resignFirstResponder()
-        sender.text = ""
+        self.msgTextField.resignFirstResponder()
+        self.msgTextField.text = ""
     }
 }
 
 class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
     
     var allMessages : Array<Message>!
-    var groupedMessages : NSMutableArray!
+    var groupedMessages : Array<NSMutableArray>!
     let MSG_CELL_ID : String = "MsgCell"
     let HEADER_CELL_ID : String = "HeaderCell"
     
@@ -155,7 +179,7 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
         super.init(coder: aDecoder)
     }
     
-    override init(frame:CGRect)
+    init(frame:CGRect, messages : Array<Message>)
     {
         super.init(frame:frame,  style:UITableViewStyle.Grouped)
         
@@ -164,16 +188,15 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
         
         self.delegate = self
         self.dataSource = self
-        
-        self.allMessages = DemoData().getData()
+        self.allMessages = messages
     }
     
     func addMessage(message:Message) {
-        allMessages.append(message)
+        self.allMessages.append(message)
         reloadData()
     }
     
-    func sortDate(m1: Message, m2: Message) -> Bool {
+    func sortByDate(m1: Message, m2: Message) -> Bool {
         return m1.date.timeIntervalSince1970 < m2.date.timeIntervalSince1970
     }
     
@@ -182,9 +205,13 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
         self.showsVerticalScrollIndicator = false
         self.showsHorizontalScrollIndicator = false
         
+        if self.allMessages.count <= 0 {
+            return
+        }
+        
         // Sort and Group
-        self.groupedMessages = NSMutableArray()
-        self.allMessages.sort(sortDate)
+        self.groupedMessages = Array<NSMutableArray>()
+        self.allMessages.sort(sortByDate)
         
         var dformatter = NSDateFormatter()
         dformatter.dateFormat = "yyyy年MM月dd日"
@@ -197,10 +224,9 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
             var datestr = dformatter.stringFromDate(msg.date)
             if (datestr != last) {
                 currentSection = NSMutableArray()
-                self.groupedMessages.addObject(currentSection)
+                self.groupedMessages.append(currentSection)
             }
             currentSection.addObject(msg)
-            
             last = datestr
         }
         
@@ -214,6 +240,9 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        if self.groupedMessages == nil {
+            return 0
+        }
         var count = self.groupedMessages.count
         return count
     }
@@ -224,17 +253,17 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        var section : AnyObject  =  self.groupedMessages[indexPath.section]
-        var data = section[indexPath.row] as! Message
-        return max(data.insets.top + data.view.frame.size.height + data.insets.bottom + 5, 50+5)
+//        var section : AnyObject  =  self.groupedMessages[indexPath.section]
+//        var data = section[indexPath.row] as! Message
+//        return max(data.insets.top + data.view.frame.size.height + data.insets.bottom + 5, 50+5)
+        return 55.0
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var section : AnyObject  =  self.groupedMessages[indexPath.section]
         var data = section[indexPath.row] as! Message
         var cell = TableViewCell(reuseIdentifier:MSG_CELL_ID)
-        cell.message = data
-        cell.render()
+        cell.render(section[indexPath.row] as! Message)
         return cell
     }
     
@@ -313,7 +342,7 @@ class TableViewCell:UITableViewCell {
     var customView:UIView!
     var bubbleImage:UIImageView!
     var logoImage:UIImageView!
-    var message:Message!
+    var messageView:MessageView!
     
     init(reuseIdentifier cellId:String)
     {
@@ -324,8 +353,11 @@ class TableViewCell:UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func render() {
+    func render(message : Message) {
         self.selectionStyle = UITableViewCellSelectionStyle.None
+        
+        var type = message.isFromMe ? ChatType.Mine : ChatType.Other
+        self.messageView = TextMessageView(messageBody: (message as! TextMessage).body, sender: message.from, date: message.date, type: type)
         
         addLogoImage()
         addBubbleImage()
@@ -334,11 +366,11 @@ class TableViewCell:UITableViewCell {
     }
     
     func addLogoImage(){
-        if(self.message.user.avatar == "") {
+        if(self.messageView.sender.logo == "") {
             return
         }
         
-        self.logoImage = UIImageView(image: UIImage(named:(self.message.user.avatar)))
+        self.logoImage = UIImageView(image: UIImage(named:(self.messageView.sender.logo)))
         self.logoImage.layer.cornerRadius = 9.0
         self.logoImage.layer.masksToBounds = true
         self.logoImage.layer.borderColor = UIColor(white: 0.0, alpha: 0.2).CGColor
@@ -350,7 +382,7 @@ class TableViewCell:UITableViewCell {
     func addBubbleImage(){
         self.bubbleImage = UIImageView()
         self.bubbleImage.setTranslatesAutoresizingMaskIntoConstraints(false)
-        if (self.message.mtype == ChatType.Other){
+        if (self.messageView.type == ChatType.Other){
             self.bubbleImage.image = UIImage(named:("yoububble.png"))!.stretchableImageWithLeftCapWidth(21,topCapHeight:14)
         }
         else {
@@ -360,7 +392,7 @@ class TableViewCell:UITableViewCell {
     }
     
     func addCustomView(){
-        self.customView = self.message.view
+        self.customView = self.messageView.view
         self.customView.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.addSubview(self.customView)
     }
@@ -371,13 +403,13 @@ class TableViewCell:UITableViewCell {
         let metrics = [
             "logoImageWidth":50,
             "logoImageHeight":50,
-            "bubbleImageWidth":self.message.insets.left + self.message.view.frame.size.width + self.message.insets.right,
-            "bubbleImageHeight":self.message.insets.top + self.message.view.frame.size.height + self.message.insets.bottom,
-            "customViewWidth":self.message.view.frame.size.width,
-            "customViewHeight":self.message.view.frame.size.height,
-            "customViewTopOffset":self.message.insets.top,
-            "customViewRightOffset":self.message.insets.right + 5,
-            "customViewLeftOffset":self.message.insets.left + 5,
+            "bubbleImageWidth":self.messageView.insets.left + self.messageView.view.frame.size.width + self.messageView.insets.right,
+            "bubbleImageHeight":self.messageView.insets.top + self.messageView.view.frame.size.height + self.messageView.insets.bottom,
+            "customViewWidth":self.messageView.view.frame.size.width+10,
+            "customViewHeight":self.messageView.view.frame.size.height,
+            "customViewTopOffset":self.messageView.insets.top,
+            "customViewRightOffset":self.messageView.insets.right + 5,
+            "customViewLeftOffset":self.messageView.insets.left + 5,
         ]
         
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[logoImage(==logoImageWidth)]", options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
@@ -389,10 +421,10 @@ class TableViewCell:UITableViewCell {
         
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[logoImage]|", options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
         
-        var constraint = (self.message.mtype == ChatType.Mine ? "H:[bubbleImage]-5-[logoImage]-5-|" : "H:|-5-[logoImage]-5-[bubbleImage]")
+        var constraint = (self.messageView.type == ChatType.Mine ? "H:[bubbleImage]-5-[logoImage]-5-|" : "H:|-5-[logoImage]-5-[bubbleImage]")
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat(constraint, options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
         
-        constraint = (self.message.mtype == ChatType.Mine ? "H:[customView]-customViewRightOffset-[logoImage]" : "H:[logoImage]-customViewLeftOffset-[customView]")
+        constraint = (self.messageView.type == ChatType.Mine ? "H:[customView]-customViewRightOffset-[logoImage]" : "H:[logoImage]-customViewLeftOffset-[customView]")
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat(constraint, options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
         
         constraint = "V:|-customViewTopOffset-[customView]"
@@ -400,79 +432,92 @@ class TableViewCell:UITableViewCell {
     }
     
     func getHeight() ->CGFloat {
-        return max(self.message.insets.top + self.message.view.frame.size.height + self.message.insets.bottom + 5, 50+5)
+        return max(self.messageView.insets.top + self.messageView.view.frame.size.height + self.messageView.insets.bottom + 5, 50+5)
     }
 }
 
-
-
-
-class User{
-    var username:String = ""
-    var avatar:String = ""
+class MessageView {
     
-    init(name:String, logo:String)
-    {
-        self.username = name
-        self.avatar = logo
-    }
-}
-
-class Message {
-    
-    var user:User
+    var sender:User
+    var type:ChatType
     var date:NSDate
-    var mtype:ChatType
-    var view:UIView
-    var insets:UIEdgeInsets
     
-    class func getTextInsetsMine() -> UIEdgeInsets {
-        return UIEdgeInsets(top: 5, left: 10, bottom: 11, right: 17)
+    var view:UIView!
+    var insets:UIEdgeInsets!
+    
+    func getEdgeInsets() -> UIEdgeInsets {
+        return insets!
     }
     
-    class func getTextInsetOthers() -> UIEdgeInsets {
-        return UIEdgeInsets(top: 5, left: 15, bottom: 11, right: 10)
+    func getView() -> UIView {
+        return view!
     }
     
-    class func getImageInsetMine() -> UIEdgeInsets {
-        return UIEdgeInsets(top: 11, left: 13, bottom: 16, right: 22)
-    }
-    
-    class func getImageInsetOthers() -> UIEdgeInsets {
-        return UIEdgeInsets(top: 11, left: 13, bottom: 16, right: 22)
-    }
-    
-    init(user:User, date:NSDate, mtype:ChatType, view:UIView, insets:UIEdgeInsets) {
-        self.view = view
-        self.user = user
+    init(sender:User, date:NSDate, type:ChatType) {
+        self.sender = sender
         self.date = date
-        self.mtype = mtype
-        self.insets = insets
+        self.type = type
+//        self.view = getView()
+//        self.insets = getEdgeInsets()
+    }
+}
+
+class TextMessageView : MessageView {
+    
+    var messageBody : String = ""
+    
+    convenience init(messageBody:String, sender:User, date:NSDate, type:ChatType) {
+        self.init(sender:sender, date:date, type:type)
+        self.messageBody = messageBody
+        self.view = getView()
+        self.insets = getEdgeInsets()
     }
     
-    convenience init(body:NSString, user:User, date:NSDate, mtype:ChatType) {
+    override func getEdgeInsets() -> UIEdgeInsets {
+        return (type == ChatType.Mine ? Constants.INSETS_TEXT_MSG_MINE : Constants.INSETS_TEXT_MSG_OTHER)
+    }
+    
+    override func getView() -> UIView {
         var font = UIFont.boldSystemFontOfSize(12)
         var width = 225, height = 10000.0
         
         var atts = NSMutableDictionary()
         atts.setObject(font, forKey: NSFontAttributeName)
         
-        var size = body.boundingRectWithSize(CGSizeMake(CGFloat(width), CGFloat(height)), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: atts as [NSObject : AnyObject], context: nil)
+        var size = messageBody.boundingRectWithSize(CGSizeMake(CGFloat(width), CGFloat(height)), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: atts as [NSObject : AnyObject], context: nil)
         
         var label = UILabel(frame:CGRectMake(0, 0, size.size.width, size.size.height))
         label.numberOfLines = 0
         label.lineBreakMode = NSLineBreakMode.ByWordWrapping
-        label.text = (body.length == 0 ? "" : body as String)
+        label.text = self.messageBody
         label.font = font
         label.backgroundColor = UIColor.clearColor()
         
-        var insets:UIEdgeInsets = (mtype == ChatType.Mine ? Message.getTextInsetsMine() : Message.getTextInsetOthers())
-        
-        self.init(user:user, date:date, mtype:mtype, view:label, insets:insets)
+        return label
+    }
+}
+
+class ImageMessageView : MessageView {
+    var imageName : String = ""
+    
+    convenience init(imageName:String, sender:User, date:NSDate, type:ChatType) {
+        self.init(sender: sender, date: date, type: type)
+        self.imageName = imageName
+        self.view = getView()
+        self.insets = getEdgeInsets()
     }
     
-    convenience init(image:UIImage, user:User, date:NSDate, mtype:ChatType) {
-        var size = image.size
+    override func getEdgeInsets() -> UIEdgeInsets {
+        return (type == ChatType.Mine ? Constants.INSETS_IMAGE_MSG_MINE : Constants.INSETS_IMAGE_MSG_OTHER)
+    }
+    
+    override func getView() -> UIView {
+        var image = UIImage(named: self.imageName)
+        if image == nil {
+            return UIImageView()
+        }
+        
+        var size = image!.size
         
         if(size.width>220) {
             size.width = 220
@@ -484,8 +529,6 @@ class Message {
         imageView.layer.cornerRadius = 5.0
         imageView.layer.masksToBounds = true
         
-        var insets:UIEdgeInsets = (mtype == ChatType.Mine ? Message.getImageInsetMine() : Message.getImageInsetOthers())
-        
-        self.init(user:user, date:date, mtype:mtype, view:imageView, insets:insets)
+        return imageView
     }
 }
