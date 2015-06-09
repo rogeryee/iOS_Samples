@@ -9,6 +9,5 @@
 import Foundation
 
 protocol MessageDelegate {
-    func newMessage(message : Message)
     func receiveMessage(message : Message)
 }

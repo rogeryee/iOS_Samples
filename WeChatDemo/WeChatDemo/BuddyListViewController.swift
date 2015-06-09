@@ -92,7 +92,7 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
         var name = presence.name
         var buddy = findBuddyByName(name)
         if buddy == nil {
-            buddy = Buddy(name:name)
+            buddy = Buddy(name:name, domain: self.appDelegate.getDomain())
             buddies.append(buddy!)
         }
         
@@ -106,7 +106,7 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
         var name = presence.name
         var buddy = findBuddyByName(name)
         if buddy == nil {
-            buddy = Buddy(name:name)
+            buddy = Buddy(name:name, domain: self.appDelegate.getDomain())
             buddies.append(buddy!)
         }
         
@@ -124,10 +124,6 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
         println("selfOffline")
         changeStatusButton(presence)
         changeNavigationTitle(presence)
-    }
-    
-    func newMessage(message: Message) {
-        return
     }
     
     func receiveMessage(message: Message) {

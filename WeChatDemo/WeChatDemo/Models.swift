@@ -15,11 +15,15 @@ enum ChatType {
 
 class User {
     var name : String = ""
+    var fullName : String = "" // with domain
+    var domain : String = ""
     var isOnline : Bool = false
     var logo : String = "xiaoming"
     
-    init(name:String) {
+    init(name:String, domain:String) {
         self.name = name
+        self.domain = domain
+        self.fullName = self.name + "@" + self.domain
     }
 }
 

@@ -21,14 +21,37 @@ class ChatViewController: UIViewController, MessageDelegate {
     init(messages:[Message], buddy : Buddy) {
         super.init(nibName: nil, bundle: nil)
         
-        self.messages = messages
-        
         self.buddy = buddy
         self.buddy.resetUnreadMessages() // 重置未读信息数
+        
+//        self.messages = messages
+        self.messages = demoData() // 测试数据
     }
 
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func demoData() -> Array<Message> {
+        var msg = TextMessage()
+        msg.isComposing = false
+        msg.isFromMe = true
+        msg.body = "hi, what's your name"
+        msg.from = User(name: "roger", domain: "rogeryee.com")
+        msg.from.logo = "xiaoming"
+        
+        var msg1 = TextMessage()
+        msg1.isComposing = false
+        msg1.isFromMe = false
+        msg1.body = "hi, my name is phoebe"
+        msg1.from = User(name: "phoebe", domain: "rogeryee.com")
+        msg1.from.logo = "xiaohua"
+        
+        var arr = Array<Message>()
+        arr.append(msg)
+        arr.append(msg1)
+        
+        return arr
     }
     
     override func viewDidLoad() {
@@ -40,6 +63,7 @@ class ChatViewController: UIViewController, MessageDelegate {
         self.view.backgroundColor = UIColor.whiteColor()
         
         self.tableView = TableView(frame:CGRectMake(0, 20, self.view.frame.size.width, self.view.frame.size.height - 20), messages: self.messages)
+        self.tableView.registerClass(TableViewCell.self, forCellReuseIdentifier: TableView.MSG_CELL_ID)
         self.tableView.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.tableView.reloadData()
         self.view.addSubview(self.tableView)
@@ -89,10 +113,6 @@ class ChatViewController: UIViewController, MessageDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    func newMessage(message: Message) {
-        return
     }
     
     func receiveMessage(message: Message) {
@@ -156,7 +176,7 @@ class SendView:UIView, UITextFieldDelegate {
     {
         var msg = TextMessage()
         msg.body = self.msgTextField.text
-        msg.from = User(name: (parent.appDelegate.xmppStream?.myJID.user)!)
+        msg.from = User(name: (parent.appDelegate.getLoginUser()), domain: parent.appDelegate.getDomain())
         msg.isDelay = false
         msg.isComposing = false
         msg.isFromMe = true
@@ -172,8 +192,8 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
     
     var allMessages : Array<Message>!
     var groupedMessages : Array<NSMutableArray>!
-    let MSG_CELL_ID : String = "MsgCell"
-    let HEADER_CELL_ID : String = "HeaderCell"
+    static let MSG_CELL_ID : String = "MsgCell"
+    static let HEADER_CELL_ID : String = "HeaderCell"
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -262,26 +282,25 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var section : AnyObject  =  self.groupedMessages[indexPath.section]
         var data = section[indexPath.row] as! Message
-        var cell = TableViewCell(reuseIdentifier:MSG_CELL_ID)
-        cell.render(section[indexPath.row] as! Message)
-        return cell
-    }
-    
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        var section : AnyObject  =  self.groupedMessages[section]
-        var data = section[0] as! Message
         
-        var dateFormatter =  NSDateFormatter()
-        dateFormatter.dateFormat = "yyyy年MM月dd日"
-        return dateFormatter.stringFromDate(data.date)
+        var cell : TableViewCell? = tableView.dequeueReusableCellWithIdentifier(TableView.MSG_CELL_ID) as? TableViewCell
+        if cell == nil {
+            cell = TableViewCell(style: UITableViewCellStyle.Default,reuseIdentifier: TableView.MSG_CELL_ID)
+        }
+        
+//        var cell = TableViewCell(reuseIdentifier:TableView.MSG_CELL_ID)
+        cell!.render(section[indexPath.row] as! Message)
+        return cell!
     }
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         var section : AnyObject  =  self.groupedMessages[section]
         var data = section[0] as! Message
-        var header = TableViewHeaderCell(reuseIdentifier: HEADER_CELL_ID)
-        header.setDate(data.date)
-        return header
+        
+        var cell = TableViewHeaderCell(reuseIdentifier: TableView.HEADER_CELL_ID)
+        cell.setDate(data.date)
+        
+        return cell
     }
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -344,10 +363,14 @@ class TableViewCell:UITableViewCell {
     var logoImage:UIImageView!
     var messageView:MessageView!
     
-    init(reuseIdentifier cellId:String)
-    {
-        super.init(style: UITableViewCellStyle.Default, reuseIdentifier:cellId)
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: UITableViewCellStyle.Default, reuseIdentifier:reuseIdentifier)
     }
+    
+//    init(reuseIdentifier cellId:String)
+//    {
+//        super.init(style: UITableViewCellStyle.Default, reuseIdentifier:cellId)
+//    }
     
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -405,7 +428,7 @@ class TableViewCell:UITableViewCell {
             "logoImageHeight":50,
             "bubbleImageWidth":self.messageView.insets.left + self.messageView.view.frame.size.width + self.messageView.insets.right,
             "bubbleImageHeight":self.messageView.insets.top + self.messageView.view.frame.size.height + self.messageView.insets.bottom,
-            "customViewWidth":self.messageView.view.frame.size.width+10,
+            "customViewWidth":self.messageView.view.frame.size.width,
             "customViewHeight":self.messageView.view.frame.size.height,
             "customViewTopOffset":self.messageView.insets.top,
             "customViewRightOffset":self.messageView.insets.right + 5,
@@ -457,8 +480,6 @@ class MessageView {
         self.sender = sender
         self.date = date
         self.type = type
-//        self.view = getView()
-//        self.insets = getEdgeInsets()
     }
 }
 

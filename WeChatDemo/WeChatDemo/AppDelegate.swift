@@ -20,6 +20,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, XMPPStreamDelegate {
     var xmppStream : XMPPStream?
     var isConnectedToServer = false
     
+    func getLoginUser() -> String {
+        return (self.xmppStream?.myJID.user)!
+    }
+    
+    func getDomain() -> String {
+        return (self.xmppStream?.myJID.domain)!
+    }
+    
     func isLoginUser(name : String) -> Bool {
         return (name == self.xmppStream?.myJID.user)
     }
@@ -54,7 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, XMPPStreamDelegate {
     // 收到聊天消息
     func xmppStream(sender: XMPPStream!, didReceiveMessage message: XMPPMessage!) {
         
-        println("didReceiveMessage \(message)")
+        //println("didReceiveMessage \(message)")
         
         if message.isChatMessage() {
             var msg = TextMessage()
@@ -71,7 +79,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, XMPPStreamDelegate {
                 msg.body = body.stringValue() // 正文
             }
             
-            msg.from = User(name: message.from().user)
+            msg.from = User(name: message.from().user, domain: self.getDomain())
             msg.from.logo = isLoginUser(message.from().user) ? "xiaoming" : "xiaohua"
             
             self.messageDelegate?.receiveMessage(msg)
