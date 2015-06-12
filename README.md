@@ -19,3 +19,9 @@ TabBar_NavigationSample ： 展示了如何综合使用TabBar和NavigationContro
 HDPhoto ： 展示了如何使用Alamofire进行网络操作并使用CollectionView展现图片列表的例子
 
 CardScanner ：展示了使用CardIO组件扫描银行卡信息的展示
+
+WeChatDemo : 暂时如何使用eJaberrd消息服务＋XMPP消息协议进行的聊天工具
+
+AlamofireTest ：展示了如何使用Alamofire工具包进行网络操作的例子
+
+TableCellWithAutoLayout ： 展示了如何使用iOS的新特性之一 表格单元格的自动布局

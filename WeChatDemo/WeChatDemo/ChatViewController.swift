@@ -8,6 +8,95 @@
 
 import UIKit
 
+class ChatViewController1 : UIViewController, UITableViewDelegate, UITableViewDataSource {
+
+    var tableView : UITableView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Do any additional setup after loading the view.
+        self.view.backgroundColor = UIColor.whiteColor()
+        self.automaticallyAdjustsScrollViewInsets = false
+        
+        self.tableView = UITableView(frame: CGRectZero)
+        self.tableView.dataSource = self
+        self.tableView.delegate = self
+        self.tableView.registerClass(CustomCell.self, forCellReuseIdentifier: "cid")
+        self.tableView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.view.addSubview(self.tableView)
+        
+        // Add Constraints
+        var views = ["tableView": self.tableView]
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[tableView]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[tableView]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
+    }
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        var cell : CustomCell? = tableView.dequeueReusableCellWithIdentifier("cid") as? CustomCell
+        if cell == nil {
+            cell = CustomCell(style: UITableViewCellStyle.Default,reuseIdentifier: TableView.MSG_CELL_ID)
+        }
+        
+        cell!.render2()
+        
+        cell!.setNeedsUpdateConstraints()
+        cell!.updateConstraintsIfNeeded()
+        
+        return cell!
+    }
+}
+
+
+class CustomCell : UITableViewCell {
+    
+    var label : UILabel!
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: UITableViewCellStyle.Default, reuseIdentifier:reuseIdentifier)
+    }
+    
+    func render2() {
+        self.label = UILabel()
+        self.label.text = "This is body dkkkkkkkkkkkfkdjfkadsjfk dsjfksdjfksdjfjsklf dkkkkkkkk kkkfkdjfkadsjfkds jfksdjfksdjfjsklf dkkkkkkkkkkkfkdjfkadsj fkdsjfksdjfksdjfjsklf dkkkkkkkkkkkfkdjfkadsjf fkdsjfksdjfksdjfjsklf"
+        self.label?.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        self.label?.numberOfLines = 0
+        self.label?.backgroundColor = UIColor.yellowColor()
+        self.label?.layer.borderColor = UIColor.blackColor().CGColor
+        self.label?.layer.borderWidth = 1
+        self.label?.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.contentView.addSubview(self.label)
+        
+        self.contentView.backgroundColor = UIColor.greenColor()
+        self.contentView.layer.borderColor = UIColor.blackColor().CGColor
+        self.contentView.layer.borderWidth = 1
+        
+        let views = ["body" : self.label]
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-20-[body]-20-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[body]-10-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
+    }
+    
+    func render() {
+        
+        
+    }
+    
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
+
 class ChatViewController: UIViewController, MessageDelegate {
     
     var appDelegate : AppDelegate!
@@ -21,11 +110,11 @@ class ChatViewController: UIViewController, MessageDelegate {
     init(messages:[Message], buddy : Buddy) {
         super.init(nibName: nil, bundle: nil)
         
-        self.buddy = buddy
-        self.buddy.resetUnreadMessages() // 重置未读信息数
+//        self.buddy = buddy
+//        self.buddy.resetUnreadMessages() // 重置未读信息数
         
 //        self.messages = messages
-        self.messages = demoData() // 测试数据
+//        self.messages = demoData() // 测试数据
     }
 
     required init(coder aDecoder: NSCoder) {
@@ -61,9 +150,10 @@ class ChatViewController: UIViewController, MessageDelegate {
         self.appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         self.appDelegate.messageDelegate = self
         self.view.backgroundColor = UIColor.whiteColor()
+        self.automaticallyAdjustsScrollViewInsets = false
         
-        self.tableView = TableView(frame:CGRectMake(0, 20, self.view.frame.size.width, self.view.frame.size.height - 20), messages: self.messages)
-        self.tableView.registerClass(TableViewCell.self, forCellReuseIdentifier: TableView.MSG_CELL_ID)
+        self.tableView = TableView(frame: CGRectZero, messages: self.messages)
+        self.tableView.registerClass(CustomCell.self, forCellReuseIdentifier: "cid")
         self.tableView.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.tableView.reloadData()
         self.view.addSubview(self.tableView)
@@ -96,10 +186,10 @@ class ChatViewController: UIViewController, MessageDelegate {
         mes.addAttributeWithName("type",stringValue:"chat")
         
         //发送给谁
-        mes.addAttributeWithName("to" ,stringValue:(self.buddy.name + "@" + (self.appDelegate.xmppStream?.myJID.domain)!))
+        mes.addAttributeWithName("to" ,stringValue: self.buddy.fullName)
         
         //由谁发送
-        mes.addAttributeWithName("from" ,stringValue:(message.from.name + "@" + (self.appDelegate.xmppStream?.myJID.domain)!))
+        mes.addAttributeWithName("from" ,stringValue: message.from.fullName)
         
         //组合
         mes.addChild(body)
@@ -204,7 +294,9 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
         super.init(frame:frame,  style:UITableViewStyle.Grouped)
         
         self.backgroundColor = UIColor.clearColor()
-        self.separatorStyle = UITableViewCellSeparatorStyle.None
+        self.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
+        
+        self.rowHeight = UITableViewAutomaticDimension
         
         self.delegate = self
         self.dataSource = self
@@ -260,52 +352,67 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        if self.groupedMessages == nil {
-            return 0
-        }
-        var count = self.groupedMessages.count
-        return count
+//        if self.groupedMessages == nil {
+//            return 0
+//        }
+//        var count = self.groupedMessages.count
+//        return count
+
+        return 1
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        var count = self.groupedMessages[section].count
-        return count
+//        var count = self.groupedMessages[section].count
+//        return count
+        return self.allMessages.count
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
 //        var section : AnyObject  =  self.groupedMessages[indexPath.section]
 //        var data = section[indexPath.row] as! Message
 //        return max(data.insets.top + data.view.frame.size.height + data.insets.bottom + 5, 50+5)
-        return 55.0
+        return 100.0
     }
+    
+//    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+//        return 55
+//    }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var section : AnyObject  =  self.groupedMessages[indexPath.section]
-        var data = section[indexPath.row] as! Message
+//        var section : AnyObject  =  self.groupedMessages[indexPath.section]
+//        var data = section[indexPath.row] as! Message
         
-        var cell : TableViewCell? = tableView.dequeueReusableCellWithIdentifier(TableView.MSG_CELL_ID) as? TableViewCell
+//        var cell : TableViewCell? = tableView.dequeueReusableCellWithIdentifier(TableView.MSG_CELL_ID) as? TableViewCell
+//        if cell == nil {
+//            cell = TableViewCell(style: UITableViewCellStyle.Default,reuseIdentifier: TableView.MSG_CELL_ID)
+//        }
+        
+//        cell!.render(section[indexPath.row] as! Message)
+//        return cell!
+        
+        var cell : CustomCell? = tableView.dequeueReusableCellWithIdentifier("cid") as? CustomCell
         if cell == nil {
-            cell = TableViewCell(style: UITableViewCellStyle.Default,reuseIdentifier: TableView.MSG_CELL_ID)
+            cell = CustomCell(style: UITableViewCellStyle.Default,reuseIdentifier: TableView.MSG_CELL_ID)
         }
         
-//        var cell = TableViewCell(reuseIdentifier:TableView.MSG_CELL_ID)
-        cell!.render(section[indexPath.row] as! Message)
+        cell!.render()
         return cell!
+        
     }
     
-    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        var section : AnyObject  =  self.groupedMessages[section]
-        var data = section[0] as! Message
-        
-        var cell = TableViewHeaderCell(reuseIdentifier: TableView.HEADER_CELL_ID)
-        cell.setDate(data.date)
-        
-        return cell
-    }
-    
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return TableViewHeaderCell.getHeight()
-    }
+//    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        var section : AnyObject  =  self.groupedMessages[section]
+//        var data = section[0] as! Message
+//        
+//        var cell = TableViewHeaderCell(reuseIdentifier: TableView.HEADER_CELL_ID)
+//        cell.setDate(data.date)
+//        
+//        return cell
+//    }
+//    
+//    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        return TableViewHeaderCell.getHeight()
+//    }
 }
 
 class TableViewHeaderCell : UITableViewCell {
@@ -367,11 +474,6 @@ class TableViewCell:UITableViewCell {
         super.init(style: UITableViewCellStyle.Default, reuseIdentifier:reuseIdentifier)
     }
     
-//    init(reuseIdentifier cellId:String)
-//    {
-//        super.init(style: UITableViewCellStyle.Default, reuseIdentifier:cellId)
-//    }
-    
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -399,7 +501,7 @@ class TableViewCell:UITableViewCell {
         self.logoImage.layer.borderColor = UIColor(white: 0.0, alpha: 0.2).CGColor
         self.logoImage.layer.borderWidth = 1.0
         self.logoImage.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.addSubview(self.logoImage)
+        self.contentView.addSubview(self.logoImage)
     }
     
     func addBubbleImage(){
@@ -411,13 +513,13 @@ class TableViewCell:UITableViewCell {
         else {
             self.bubbleImage.image = UIImage(named:"mebubble.png")!.stretchableImageWithLeftCapWidth(15, topCapHeight:14)
         }
-        self.addSubview(self.bubbleImage)
+        self.contentView.addSubview(self.bubbleImage)
     }
     
     func addCustomView(){
         self.customView = self.messageView.view
         self.customView.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.addSubview(self.customView)
+        self.contentView.addSubview(self.customView)
     }
     
     func addConstraints(){
@@ -435,23 +537,23 @@ class TableViewCell:UITableViewCell {
             "customViewLeftOffset":self.messageView.insets.left + 5,
         ]
         
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[logoImage(==logoImageWidth)]", options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[logoImage(==logoImageHeight)]", options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[bubbleImage(==bubbleImageWidth)]", options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[bubbleImage(==bubbleImageHeight)]", options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[customView(==customViewWidth)]", options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[customView(==customViewHeight)]", options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[logoImage(==logoImageWidth)]", options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[logoImage(==logoImageHeight)]", options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[bubbleImage(==bubbleImageWidth)]", options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[bubbleImage(==bubbleImageHeight)]", options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[customView(==customViewWidth)]", options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[customView(==customViewHeight)]", options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
         
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[logoImage]|", options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[logoImage]|", options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
         
         var constraint = (self.messageView.type == ChatType.Mine ? "H:[bubbleImage]-5-[logoImage]-5-|" : "H:|-5-[logoImage]-5-[bubbleImage]")
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat(constraint, options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat(constraint, options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
         
         constraint = (self.messageView.type == ChatType.Mine ? "H:[customView]-customViewRightOffset-[logoImage]" : "H:[logoImage]-customViewLeftOffset-[customView]")
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat(constraint, options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat(constraint, options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
         
         constraint = "V:|-customViewTopOffset-[customView]"
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat(constraint, options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat(constraint, options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views));
     }
     
     func getHeight() ->CGFloat {
@@ -507,9 +609,9 @@ class TextMessageView : MessageView {
         
         var size = messageBody.boundingRectWithSize(CGSizeMake(CGFloat(width), CGFloat(height)), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: atts as [NSObject : AnyObject], context: nil)
         
-        var label = UILabel(frame:CGRectMake(0, 0, size.size.width, size.size.height))
+        var label = UILabel(frame:CGRectMake(0, 0, size.size.width + 10, size.size.height))
         label.numberOfLines = 0
-        label.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        label.lineBreakMode = NSLineBreakMode.ByCharWrapping
         label.text = self.messageBody
         label.font = font
         label.backgroundColor = UIColor.clearColor()
