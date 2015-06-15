@@ -280,20 +280,20 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
         return self.allMessages.count
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+//    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
 //        var section : AnyObject  =  self.groupedMessages[indexPath.section]
 //        var data = section[indexPath.row] as! Message
 //        return max(data.insets.top + data.view.frame.size.height + data.insets.bottom + 5, 50+5)
-        return 100.0
-    }
+////        return 100.0
+//    }
     
 //    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
 //        return 55
 //    }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var section : AnyObject  =  self.groupedMessages[indexPath.section]
-        var data = section[indexPath.row] as! Message
+//        var section : AnyObject  =  self.groupedMessages[indexPath.section]
+//        var data = section[indexPath.row] as! Message
         
 //        var cell : TableViewCell? = tableView.dequeueReusableCellWithIdentifier(TableView.MSG_CELL_ID) as? TableViewCell
 //        if cell == nil {
@@ -303,13 +303,16 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
 //        cell!.render(section[indexPath.row] as! Message)
 //        return cell!
         
-        var cell : TableViewCell? = tableView.dequeueReusableCellWithIdentifier("cid") as? TableViewCell
-        if cell == nil {
-            cell = TableViewCell(style: UITableViewCellStyle.Default,reuseIdentifier: TableView.MSG_CELL_ID)
-        }
+        var data = self.allMessages[indexPath.row]
         
-        cell!.render(data)
-        return cell!
+//        var cell : TableViewCell? = tableView.dequeueReusableCellWithIdentifier("cid") as? TableViewCell
+//        if cell == nil {
+//            cell = TableViewCell(style: UITableViewCellStyle.Default,reuseIdentifier: TableView.MSG_CELL_ID)
+//        }
+        
+        var cell = TableViewCell(style: UITableViewCellStyle.Default,reuseIdentifier: TableView.MSG_CELL_ID)
+        cell.render(data)
+        return cell
         
     }
     
@@ -404,6 +407,7 @@ class TableViewCell:UITableViewCell {
     }
     
     func addLogoImage(){
+        
         if(self.messageView.sender.logo == "") {
             return
         }
