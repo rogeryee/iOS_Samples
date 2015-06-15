@@ -181,8 +181,8 @@ class BuddyListViewController: UIViewController, UITableViewDataSource, UITableV
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-//        var chatViewController = ChatViewController(messages: self.buddies[indexPath.row].unreadMessages, buddy: self.buddies[indexPath.row])
-        var chatViewController = ChatViewController1()
+        var chatViewController = ChatViewController(messages: self.buddies[indexPath.row].unreadMessages, buddy: self.buddies[indexPath.row])
+//        var chatViewController = ChatViewController1()
         self.navigationController!.pushViewController(chatViewController, animated: true)
         tableView.reloadData()
     }

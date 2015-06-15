@@ -8,95 +8,6 @@
 
 import UIKit
 
-class ChatViewController1 : UIViewController, UITableViewDelegate, UITableViewDataSource {
-
-    var tableView : UITableView!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        // Do any additional setup after loading the view.
-        self.view.backgroundColor = UIColor.whiteColor()
-        self.automaticallyAdjustsScrollViewInsets = false
-        
-        self.tableView = UITableView(frame: CGRectZero)
-        self.tableView.dataSource = self
-        self.tableView.delegate = self
-        self.tableView.registerClass(CustomCell.self, forCellReuseIdentifier: "cid")
-        self.tableView.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.tableView.rowHeight = UITableViewAutomaticDimension
-        self.view.addSubview(self.tableView)
-        
-        // Add Constraints
-        var views = ["tableView": self.tableView]
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[tableView]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[tableView]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views));
-    }
-    
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell : CustomCell? = tableView.dequeueReusableCellWithIdentifier("cid") as? CustomCell
-        if cell == nil {
-            cell = CustomCell(style: UITableViewCellStyle.Default,reuseIdentifier: TableView.MSG_CELL_ID)
-        }
-        
-        cell!.render2()
-        
-        cell!.setNeedsUpdateConstraints()
-        cell!.updateConstraintsIfNeeded()
-        
-        return cell!
-    }
-}
-
-
-class CustomCell : UITableViewCell {
-    
-    var label : UILabel!
-    
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: UITableViewCellStyle.Default, reuseIdentifier:reuseIdentifier)
-    }
-    
-    func render2() {
-        self.label = UILabel()
-        self.label.text = "This is body dkkkkkkkkkkkfkdjfkadsjfk dsjfksdjfksdjfjsklf dkkkkkkkk kkkfkdjfkadsjfkds jfksdjfksdjfjsklf dkkkkkkkkkkkfkdjfkadsj fkdsjfksdjfksdjfjsklf dkkkkkkkkkkkfkdjfkadsjf fkdsjfksdjfksdjfjsklf"
-        self.label?.lineBreakMode = NSLineBreakMode.ByWordWrapping
-        self.label?.numberOfLines = 0
-        self.label?.backgroundColor = UIColor.yellowColor()
-        self.label?.layer.borderColor = UIColor.blackColor().CGColor
-        self.label?.layer.borderWidth = 1
-        self.label?.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.contentView.addSubview(self.label)
-        
-        self.contentView.backgroundColor = UIColor.greenColor()
-        self.contentView.layer.borderColor = UIColor.blackColor().CGColor
-        self.contentView.layer.borderWidth = 1
-        
-        let views = ["body" : self.label]
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-20-[body]-20-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[body]-10-|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
-    }
-    
-    func render() {
-        
-        
-    }
-    
-    required init(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-
-
 class ChatViewController: UIViewController, MessageDelegate {
     
     var appDelegate : AppDelegate!
@@ -110,11 +21,11 @@ class ChatViewController: UIViewController, MessageDelegate {
     init(messages:[Message], buddy : Buddy) {
         super.init(nibName: nil, bundle: nil)
         
-//        self.buddy = buddy
-//        self.buddy.resetUnreadMessages() // 重置未读信息数
+        self.buddy = buddy
+        self.buddy.resetUnreadMessages() // 重置未读信息数
         
-//        self.messages = messages
-//        self.messages = demoData() // 测试数据
+        self.messages = messages
+        self.messages = demoData() // 测试数据
     }
 
     required init(coder aDecoder: NSCoder) {
@@ -153,8 +64,10 @@ class ChatViewController: UIViewController, MessageDelegate {
         self.automaticallyAdjustsScrollViewInsets = false
         
         self.tableView = TableView(frame: CGRectZero, messages: self.messages)
-        self.tableView.registerClass(CustomCell.self, forCellReuseIdentifier: "cid")
+        self.tableView.registerClass(TableViewCell.self, forCellReuseIdentifier: "cid")
         self.tableView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.tableView.estimatedRowHeight = 55
+        self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.reloadData()
         self.view.addSubview(self.tableView)
         
@@ -379,8 +292,8 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
 //    }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-//        var section : AnyObject  =  self.groupedMessages[indexPath.section]
-//        var data = section[indexPath.row] as! Message
+        var section : AnyObject  =  self.groupedMessages[indexPath.section]
+        var data = section[indexPath.row] as! Message
         
 //        var cell : TableViewCell? = tableView.dequeueReusableCellWithIdentifier(TableView.MSG_CELL_ID) as? TableViewCell
 //        if cell == nil {
@@ -390,12 +303,12 @@ class TableView:UITableView, UITableViewDelegate, UITableViewDataSource {
 //        cell!.render(section[indexPath.row] as! Message)
 //        return cell!
         
-        var cell : CustomCell? = tableView.dequeueReusableCellWithIdentifier("cid") as? CustomCell
+        var cell : TableViewCell? = tableView.dequeueReusableCellWithIdentifier("cid") as? TableViewCell
         if cell == nil {
-            cell = CustomCell(style: UITableViewCellStyle.Default,reuseIdentifier: TableView.MSG_CELL_ID)
+            cell = TableViewCell(style: UITableViewCellStyle.Default,reuseIdentifier: TableView.MSG_CELL_ID)
         }
         
-        cell!.render()
+        cell!.render(data)
         return cell!
         
     }
