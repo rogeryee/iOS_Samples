@@ -25,3 +25,6 @@ WeChatDemo : 暂时如何使用eJaberrd消息服务＋XMPP消息协议进行的�
 AlamofireTest ：展示了如何使用Alamofire工具包进行网络操作的例子
 
 TableCellWithAutoLayout ： 展示了如何使用iOS的新特性之一 表格单元格的自动布局
+
+CoreDataSamples\HitList ： 展示了如何使用Core Data来保存和读取本地数据
+CoreDataSamples\Bowtie ： 展示了如何使用Entity的子类
