@@ -12,7 +12,7 @@ class SecondViewController: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        self.view.backgroundColor = UIColor.yellowColor()
+        self.view.backgroundColor = UIColor.brownColor()
         self.title = "历史"
     }
     

@@ -518,6 +518,7 @@
 				CAFFE5431B1FF5D000F04539 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		CAFFE5441B1FF5D000F04539 /* Build configuration list for PBXNativeTarget "AlamofireTestTests" */ = {
 			isa = XCConfigurationList;
@@ -526,6 +527,7 @@
 				CAFFE5461B1FF5D000F04539 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
