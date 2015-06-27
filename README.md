@@ -28,3 +28,5 @@ TableCellWithAutoLayout ： 展示了如何使用iOS的新特性之一 表格单
 
 CoreDataSamples\HitList ： 展示了如何使用Core Data来保存和读取本地数据
 CoreDataSamples\Bowtie ： 展示了如何使用Entity的子类
+
+iOSChartDemo : 展示了如何使用第三方的组建（iOS Charts : https://github.com/danielgindi/ios-charts/）绘制图形的例子。

@@ -46,7 +46,7 @@ class OtherChartViewController: UIViewController {
         let metrics = ["height":self.view.frame.height/2 - 30]
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[line]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[pie]|", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[line(==height)]-10-[pie(==height)]|", options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views))
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[line(==height)]-(>=1)-[pie(==height)]|", options: NSLayoutFormatOptions.allZeros, metrics: metrics, views: views))
     }
     
     func setChart(dataPoints: [String], values: [Double]) {

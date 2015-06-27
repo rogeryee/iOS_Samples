@@ -117,11 +117,11 @@
 				CA6211251B3D3A0B003437D9 /* AppDelegate.swift */,
 				CA6211451B3D3B20003437D9 /* BarChartViewController.swift */,
 				CA6211271B3D3A0B003437D9 /* ChartListViewController.swift */,
+				CA6211531B3D4C83003437D9 /* OtherChartViewController.swift */,
 				CA62112C1B3D3A0B003437D9 /* Images.xcassets */,
 				CA62112E1B3D3A0B003437D9 /* LaunchScreen.xib */,
 				CA6211291B3D3A0B003437D9 /* Main.storyboard */,
 				CA6211231B3D3A0B003437D9 /* Supporting Files */,
-				CA6211531B3D4C83003437D9 /* OtherChartViewController.swift */,
 			);
 			path = iOSChartDemo;
 			sourceTree = "<group>";
