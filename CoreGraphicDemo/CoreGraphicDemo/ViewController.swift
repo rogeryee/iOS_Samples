@@ -24,11 +24,13 @@ class ViewController: UIViewController {
         
         let plusColor = UIColor(red: 87/255, green: 218/255, blue: 213/255, alpha: 1)
         self.pushPlusButton = UIPushButton(fillColor: plusColor, isPlusType: true)
+        self.pushPlusButton.addTarget(self, action: "btnPushButton:", forControlEvents: UIControlEvents.TouchUpInside)
         self.pushPlusButton.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.view.addSubview(self.pushPlusButton)
         
         let minusColor = UIColor(red: 238/255, green: 77/255, blue: 77/255, alpha: 1)
         self.pushMinusButton = UIPushButton(fillColor: minusColor, isPlusType: false)
+        self.pushMinusButton.addTarget(self, action: "btnPushButton:", forControlEvents: UIControlEvents.TouchUpInside)
         self.pushMinusButton.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.view.addSubview(self.pushMinusButton)
         
@@ -52,6 +54,14 @@ class ViewController: UIViewController {
         self.view.addConstraint(NSLayoutConstraint(item: self.pushMinusButton, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: 170.0))
     }
 
+    func btnPushButton(button: UIPushButton) {
+        if button.isPlusType! {
+            self.countView.increaseCounter()
+        } else {
+            self.countView.decreaseCounter()
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
