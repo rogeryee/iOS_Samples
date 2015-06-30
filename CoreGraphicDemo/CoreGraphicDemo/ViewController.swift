@@ -10,17 +10,23 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    var countView:UICounterView!
+    var containerView:ContainerView!
     var pushPlusButton:UIPushButton!
     var pushMinusButton:UIPushButton!
+    
+    var isGraphicViewShowing = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        self.countView = UICounterView()
-        self.countView.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.view.addSubview(self.countView)
+        var gesture = UITapGestureRecognizer(target: self, action: Selector("counterViewTap:"))
+        gesture.numberOfTapsRequired = 1
+        
+        self.containerView = ContainerView()
+        self.containerView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.containerView.addGestureRecognizer(gesture)
+        self.view.addSubview(self.containerView)
         
         let plusColor = UIColor(red: 87/255, green: 218/255, blue: 213/255, alpha: 1)
         self.pushPlusButton = UIPushButton(fillColor: plusColor, isPlusType: true)
@@ -34,32 +40,57 @@ class ViewController: UIViewController {
         self.pushMinusButton.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.view.addSubview(self.pushMinusButton)
         
-        let views = ["count":self.countView,"plus":self.pushPlusButton, "minus":self.pushMinusButton]
+        let views = ["container":self.containerView, "plus":self.pushPlusButton, "minus":self.pushMinusButton]
         
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[count(==230)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[count(==230)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[container(==300)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[container(==300)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
         
-        self.view.addConstraint(NSLayoutConstraint(item: self.countView, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0))
-        self.view.addConstraint(NSLayoutConstraint(item: self.countView, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: -150.0))
+        self.view.addConstraint(NSLayoutConstraint(item: self.containerView, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0))
+        self.view.addConstraint(NSLayoutConstraint(item: self.containerView, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: -150.0))
+        
         
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[plus(==100)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[plus(==100)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
         
         self.view.addConstraint(NSLayoutConstraint(item: self.pushPlusButton, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0))
-        self.view.addConstraint(NSLayoutConstraint(item: self.pushPlusButton, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: 50.0))
+        self.view.addConstraint(NSLayoutConstraint(item: self.pushPlusButton, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: 80.0))
         
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[minus(==60)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[minus(==60)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
         self.view.addConstraint(NSLayoutConstraint(item: self.pushMinusButton, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0))
-        self.view.addConstraint(NSLayoutConstraint(item: self.pushMinusButton, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: 170.0))
+        self.view.addConstraint(NSLayoutConstraint(item: self.pushMinusButton, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: 200.0))
     }
 
     func btnPushButton(button: UIPushButton) {
         if button.isPlusType! {
-            self.countView.increaseCounter()
+            self.containerView.counterView.increaseCounter()
         } else {
-            self.countView.decreaseCounter()
+            self.containerView.counterView.decreaseCounter()
         }
+        
+        if isGraphicViewShowing {
+            counterViewTap(nil)
+        }
+    }
+    
+    func test() {
+        if isGraphicViewShowing {
+            UIView.transitionFromView(self.containerView.graphicView, toView: self.containerView.counterView, duration: 1.0, options: UIViewAnimationOptions.TransitionFlipFromLeft | UIViewAnimationOptions.ShowHideTransitionViews, completion: nil)
+        } else {
+            UIView.transitionFromView(self.containerView.counterView, toView: self.containerView.graphicView, duration: 1.0, options: UIViewAnimationOptions.TransitionFlipFromRight | UIViewAnimationOptions.ShowHideTransitionViews, completion: nil)
+        }
+        
+        isGraphicViewShowing = !isGraphicViewShowing
+    }
+    
+    func counterViewTap(sender:UITapGestureRecognizer?) {
+        if isGraphicViewShowing {
+            UIView.transitionFromView(self.containerView.graphicView, toView: self.containerView.counterView, duration: 1.0, options: UIViewAnimationOptions.TransitionFlipFromLeft | UIViewAnimationOptions.ShowHideTransitionViews, completion: nil)
+        } else {
+            UIView.transitionFromView(self.containerView.counterView, toView: self.containerView.graphicView, duration: 1.0, options: UIViewAnimationOptions.TransitionFlipFromRight | UIViewAnimationOptions.ShowHideTransitionViews, completion: nil)
+        }
+        
+        isGraphicViewShowing = !isGraphicViewShowing
     }
     
     override func didReceiveMemoryWarning() {
@@ -68,5 +99,42 @@ class ViewController: UIViewController {
     }
 
     
+}
+
+class ContainerView:UIView {
+    
+    var counterView:UICounterView!
+    var graphicView:UIGraphicView!
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.backgroundColor = UIColor.whiteColor()
+        
+        self.counterView = UICounterView()
+        self.counterView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.addSubview(self.counterView)
+        
+        self.graphicView = UIGraphicView()
+        self.graphicView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.addSubview(self.graphicView)
+        
+        let views = ["counter":self.counterView, "graphic":self.graphicView]
+        
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[counter(==230)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[counter(==230)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
+        
+        self.addConstraint(NSLayoutConstraint(item: self.counterView, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0))
+        self.addConstraint(NSLayoutConstraint(item: self.counterView, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: 0.0))
+        
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[graphic(==300)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[graphic(==300)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
+        
+        self.addConstraint(NSLayoutConstraint(item: self.graphicView, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0))
+        self.addConstraint(NSLayoutConstraint(item: self.graphicView, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: 0.0))
+    }
+    
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CA0A4C5E1B428B2700D26FDD /* UIGraphicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0A4C5D1B428B2700D26FDD /* UIGraphicView.swift */; };
 		CAF4F3C91B3FD1D000B5CAB2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF4F3C81B3FD1D000B5CAB2 /* AppDelegate.swift */; };
 		CAF4F3CB1B3FD1D000B5CAB2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF4F3CA1B3FD1D000B5CAB2 /* ViewController.swift */; };
 		CAF4F3CE1B3FD1D000B5CAB2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CAF4F3CC1B3FD1D000B5CAB2 /* Main.storyboard */; };
@@ -28,6 +29,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CA0A4C5D1B428B2700D26FDD /* UIGraphicView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIGraphicView.swift; sourceTree = "<group>"; };
 		CAF4F3C31B3FD1D000B5CAB2 /* CoreGraphicDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoreGraphicDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAF4F3C71B3FD1D000B5CAB2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CAF4F3C81B3FD1D000B5CAB2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 			children = (
 				CAF4F3ED1B3FE5FC00B5CAB2 /* UIPushButton.swift */,
 				CAF4F3F21B400E6D00B5CAB2 /* UICounterView.swift */,
+				CA0A4C5D1B428B2700D26FDD /* UIGraphicView.swift */,
 			);
 			name = widgets;
 			sourceTree = "<group>";
@@ -229,6 +232,7 @@
 				CAF4F3EE1B3FE5FC00B5CAB2 /* UIPushButton.swift in Sources */,
 				CAF4F3CB1B3FD1D000B5CAB2 /* ViewController.swift in Sources */,
 				CAF4F3C91B3FD1D000B5CAB2 /* AppDelegate.swift in Sources */,
+				CA0A4C5E1B428B2700D26FDD /* UIGraphicView.swift in Sources */,
 				CAF4F3F31B400E6D00B5CAB2 /* UICounterView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -427,6 +431,7 @@
 				CAF4F3E41B3FD1D000B5CAB2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		CAF4F3E51B3FD1D000B5CAB2 /* Build configuration list for PBXNativeTarget "CoreGraphicDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -435,6 +440,7 @@
 				CAF4F3E71B3FD1D000B5CAB2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
