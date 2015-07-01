@@ -43,7 +43,7 @@ class ViewController: UIViewController {
         let views = ["container":self.containerView, "plus":self.pushPlusButton, "minus":self.pushMinusButton]
         
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[container(==300)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[container(==300)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[container(==250)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
         
         self.view.addConstraint(NSLayoutConstraint(item: self.containerView, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0))
         self.view.addConstraint(NSLayoutConstraint(item: self.containerView, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: -150.0))
@@ -73,16 +73,6 @@ class ViewController: UIViewController {
         }
     }
     
-    func test() {
-        if isGraphicViewShowing {
-            UIView.transitionFromView(self.containerView.graphicView, toView: self.containerView.counterView, duration: 1.0, options: UIViewAnimationOptions.TransitionFlipFromLeft | UIViewAnimationOptions.ShowHideTransitionViews, completion: nil)
-        } else {
-            UIView.transitionFromView(self.containerView.counterView, toView: self.containerView.graphicView, duration: 1.0, options: UIViewAnimationOptions.TransitionFlipFromRight | UIViewAnimationOptions.ShowHideTransitionViews, completion: nil)
-        }
-        
-        isGraphicViewShowing = !isGraphicViewShowing
-    }
-    
     func counterViewTap(sender:UITapGestureRecognizer?) {
         if isGraphicViewShowing {
             UIView.transitionFromView(self.containerView.graphicView, toView: self.containerView.counterView, duration: 1.0, options: UIViewAnimationOptions.TransitionFlipFromLeft | UIViewAnimationOptions.ShowHideTransitionViews, completion: nil)
@@ -97,8 +87,6 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    
 }
 
 class ContainerView:UIView {
@@ -108,7 +96,7 @@ class ContainerView:UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.whiteColor()
+        self.backgroundColor = UIColor.clearColor()
         
         self.counterView = UICounterView()
         self.counterView.setTranslatesAutoresizingMaskIntoConstraints(false)
@@ -118,16 +106,18 @@ class ContainerView:UIView {
         self.graphicView.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.addSubview(self.graphicView)
         
-        let views = ["counter":self.counterView, "graphic":self.graphicView]
+        let views = ["counter":self.counterView, "placeholder":self.graphicView]
         
+        // Constraints of Counter
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[counter(==230)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[counter(==230)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
         
         self.addConstraint(NSLayoutConstraint(item: self.counterView, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0))
         self.addConstraint(NSLayoutConstraint(item: self.counterView, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: 0.0))
         
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[graphic(==300)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[graphic(==300)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
+        // Constraints of Graphic Placeholder
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[placeholder(==300)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[placeholder(==250)]", options: NSLayoutFormatOptions.allZeros, metrics: nil, views: views))
         
         self.addConstraint(NSLayoutConstraint(item: self.graphicView, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0))
         self.addConstraint(NSLayoutConstraint(item: self.graphicView, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: 0.0))

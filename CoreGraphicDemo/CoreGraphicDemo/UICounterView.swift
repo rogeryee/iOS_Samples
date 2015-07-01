@@ -29,6 +29,8 @@ class UICounterView: UIView {
         super.init(frame: frame)
         self.opaque = false
         
+//        self.backgroundColor = UIColor.clearColor()
+        
         self.glassLabel = UILabel()
         self.glassLabel.text = String(counter)
         self.glassLabel.textAlignment = .Center
@@ -47,6 +49,7 @@ class UICounterView: UIView {
         
         var context = UIGraphicsGetCurrentContext();
         CGContextClearRect(context, rect)
+        
         
         drawArc()
     }
