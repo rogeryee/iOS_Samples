@@ -27,9 +27,9 @@ class UICounterView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.opaque = false
+//        self.opaque = false
         
-//        self.backgroundColor = UIColor.clearColor()
+        self.backgroundColor = UIColor.clearColor()
         
         self.glassLabel = UILabel()
         self.glassLabel.text = String(counter)
@@ -47,14 +47,14 @@ class UICounterView: UIView {
     // An empty implementation adversely affects performance during animation.
     override func drawRect(rect: CGRect) {
         
-        var context = UIGraphicsGetCurrentContext();
-        CGContextClearRect(context, rect)
+//        var context = UIGraphicsGetCurrentContext();
+//        CGContextClearRect(context, rect)
         
         
-        drawArc()
+        drawArc(rect)
     }
     
-    func drawArc() {
+    func drawArc(rect: CGRect) {
         
         let center = CGPoint(x:bounds.width/2, y: bounds.height/2)
         let radius: CGFloat = max(bounds.width, bounds.height)
@@ -105,6 +105,49 @@ class UICounterView: UIView {
         outlineColor.setStroke()
         outlinePath.lineWidth = 5.0
         outlinePath.stroke()
+        
+        // Draw Markers
+        let context = UIGraphicsGetCurrentContext()
+        CGContextSaveGState(context)
+        outlineColor.setFill()
+        
+        let markerWidth:CGFloat = 5.0
+        let markerSize:CGFloat = 10.0
+        
+        //2 - the marker rectangle positioned at the top left
+        var markerPath = UIBezierPath(rect:
+            CGRect(x: -markerWidth/2,
+                y: 0,
+                width: markerWidth,
+                height: markerSize))
+        
+        //3 - move top left of context to the previous center position
+        CGContextTranslateCTM(context,
+            rect.width/2,
+            rect.height/2)
+        
+        for i in 1...NoOfGlasses {
+            //4 - save the centred context
+            CGContextSaveGState(context)
+            
+            //5 - calculate the rotation angle
+            var angle = arcLengthPerGlass * CGFloat(i) + startAngle - π/2
+            
+            //rotate and translate
+            CGContextRotateCTM(context, angle)
+            CGContextTranslateCTM(context,
+                0,
+                rect.height/2 - markerSize)
+            
+            //6 - fill the marker rectangle
+            markerPath.fill()
+            
+            //7 - restore the centred context for the next rotate
+            CGContextRestoreGState(context)
+        }
+        
+        //8 - restore the original state in case of more painting
+        CGContextRestoreGState(context)
         
         // Set label constraints
         let views = ["label":self.glassLabel]
