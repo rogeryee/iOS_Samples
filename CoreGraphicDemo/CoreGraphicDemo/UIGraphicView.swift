@@ -15,6 +15,12 @@ class UIGraphicView: UIView {
     
     var graphPoints:[Int] = [4, 2, 6, 4, 5, 8, 3]
     
+    var titleLabel : UILabel!
+    var avgLabel : UILabel!
+    var avgCountLabel : UILabel!
+    var maxLabel : UILabel!
+    var zeroLabel : UILabel!
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.opaque = false
@@ -137,6 +143,81 @@ class UIGraphicView: UIView {
         
         linePath.lineWidth = 1.0
         linePath.stroke()
+        
+        // Draw labels
+        self.titleLabel = UILabel(frame: CGRectMake(8, 8, 92, 21))
+        self.titleLabel.textColor = UIColor.whiteColor()
+        self.titleLabel.backgroundColor = UIColor.clearColor()
+        self.titleLabel.textAlignment = NSTextAlignment.Left
+        self.titleLabel.font = UIFont.systemFontOfSize(12)
+        self.titleLabel.text = "Water Drunk"
+        self.addSubview(self.titleLabel)
+        
+        self.avgLabel = UILabel(frame: CGRectMake(8, 32, 55, 24))
+        self.avgLabel.textColor = UIColor.whiteColor()
+        self.avgLabel.backgroundColor = UIColor.clearColor()
+        self.avgLabel.textAlignment = NSTextAlignment.Left
+        self.avgLabel.font = UIFont.systemFontOfSize(12)
+        self.avgLabel.text = "Average : "
+        self.addSubview(self.avgLabel)
+        
+        self.avgCountLabel = UILabel(frame: CGRectMake(66, 32, 42, 21))
+        self.avgCountLabel.textColor = UIColor.whiteColor()
+        self.avgCountLabel.backgroundColor = UIColor.clearColor()
+        self.avgCountLabel.textAlignment = NSTextAlignment.Left
+        self.avgCountLabel.font = UIFont.systemFontOfSize(12)
+        self.avgCountLabel.text = "2"
+        self.addSubview(self.avgCountLabel)
+        
+        self.maxLabel = UILabel(frame: CGRectMake(250, 49, 42, 21))
+        self.maxLabel.textColor = UIColor.whiteColor()
+        self.maxLabel.backgroundColor = UIColor.clearColor()
+        self.maxLabel.textAlignment = NSTextAlignment.Right
+        self.maxLabel.font = UIFont.systemFontOfSize(12)
+        self.maxLabel.text = "8"
+        self.addSubview(self.maxLabel)
+        
+        self.zeroLabel = UILabel(frame: CGRectMake(250, 190, 42, 21))
+        self.zeroLabel.textColor = UIColor.whiteColor()
+        self.zeroLabel.backgroundColor = UIColor.clearColor()
+        self.zeroLabel.textAlignment = NSTextAlignment.Right
+        self.zeroLabel.font = UIFont.systemFontOfSize(12)
+        self.zeroLabel.text = "0"
+        self.addSubview(self.zeroLabel)
+        
+        // Set Date Labels
+        let days = ["S", "S", "M", "T", "W", "T", "F"]
+        for i in 0..<graphPoints.count {
+            var point = CGPoint(x: columnXPoint(i), y: 200)
+            point.x += 2
+            point.y += 5
+            
+            var label = UILabel(frame: CGRectMake(point.x - 10, point.y, 20, 21))
+            label.textColor = UIColor.whiteColor()
+            label.backgroundColor = UIColor.clearColor()
+            label.textAlignment = NSTextAlignment.Right
+            label.font = UIFont.systemFontOfSize(12)
+            
+            let dateFormatter = NSDateFormatter()
+            let calendar = NSCalendar.currentCalendar()
+            let componentOptions:NSCalendarUnit = NSCalendarUnit.CalendarUnitWeekday
+            let interval:Double = 60 * 60 * 24 * Double((i - 6))
+            let component = calendar.components(componentOptions, fromDate:NSDate(timeIntervalSinceNow:interval))
+            
+//            println("i = \(i), componnet.weekday = \(component.weekday)")
+            label.text = component.weekday == 7 ? "\(days[0])" : "\(days[component.weekday])"
+            self.addSubview(label)
+        }
     }
-
+    
+    func reDrawGraph(currentCounter:Int) {
+        self.graphPoints[self.graphPoints.count - 1] = currentCounter
+        
+        self.setNeedsDisplay()
+        
+        self.maxLabel.text = "\(maxElement(self.graphPoints))"
+        
+        let average = self.graphPoints.reduce(0, combine: +) / self.graphPoints.count
+        self.avgCountLabel.text = "\(average)"
+    }
 }

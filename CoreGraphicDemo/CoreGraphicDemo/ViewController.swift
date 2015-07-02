@@ -78,6 +78,9 @@ class ViewController: UIViewController {
             UIView.transitionFromView(self.containerView.graphicView, toView: self.containerView.counterView, duration: 1.0, options: UIViewAnimationOptions.TransitionFlipFromLeft | UIViewAnimationOptions.ShowHideTransitionViews, completion: nil)
         } else {
             UIView.transitionFromView(self.containerView.counterView, toView: self.containerView.graphicView, duration: 1.0, options: UIViewAnimationOptions.TransitionFlipFromRight | UIViewAnimationOptions.ShowHideTransitionViews, completion: nil)
+            
+            let counter = self.containerView.counterView.counter
+            self.containerView.graphicView.reDrawGraph(counter)
         }
         
         isGraphicViewShowing = !isGraphicViewShowing
